@@ -4,23 +4,1388 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CARKECORS UNITY | Memory Box</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cream: '#FDFBF7', sage: '#E3E7D3', sand: '#D4C3B3', terracotta: '#C8795A', coffee: '#4A3F35', darkBg: '#1C1917', darkCard: '#292524', darkInput: '#44403C' }, fontFamily: { serif: ['Lora', 'serif'], sans: ['Nunito', 'sans-serif'] } } } };</script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Mengaktifkan Dark Mode berbasis class
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FDFBF7',
+                        sage: '#E3E7D3',
+                        sand: '#D4C3B3',
+                        terracotta: '#C8795A',
+                        coffee: '#4A3F35',
+                        // Palet Khusus Dark Mode
+                        darkBg: '#1C1917',   // Latar belakang utama (Stone 900)
+                        darkCard: '#292524', // Latar belakang kartu/modal (Stone 800)
+                        darkInput: '#44403C' // Latar input (Stone 700)
+                    },
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for Polaroid & Animations */
+        .polaroid {
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: scale(1.03) rotate(-2deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        .polaroid:nth-child(even):hover {
+            transform: scale(1.03) rotate(2deg);
+        }
+        
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4C3B3; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C8795A; 
+        }
+
+        /* Dark Mode Scrollbar */
+        html.dark ::-webkit-scrollbar-track {
+            background: #1C1917; 
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #4A3F35; 
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #C8795A; 
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+        }
+    </style>
 </head>
-<body class="bg-cream dark:bg-darkBg text-coffee dark:text-gray-200 font-sans antialiased overflow-x-hidden">
-<header class="fixed w-full top-0 z-50 bg-cream/90 dark:bg-darkBg/90 backdrop-blur-md shadow-sm"><div class="max-w-7xl mx-auto px-4"><div class="flex justify-between items-center h-20"><a href="javascript:void(0)" onclick="handleLogoClick()" class="flex items-center gap-3"><img id="main-logo-img" class="w-10 h-10 rounded-full" alt="Logo Carkecors"><span class="font-serif text-2xl font-bold">CARKECORS <span class="text-terracotta">UNITY</span></span></a><nav class="hidden md:flex gap-8 items-center"><a href="#beranda" class="nav-link">Beranda</a><a href="#filosofi" class="nav-link">Filosofi</a><a href="#galeri" class="nav-link">Galeri Kenangan</a><a href="#anggota" class="nav-link">Anggota Kami</a><button onclick="toggleDarkMode()"><i id="theme-icon-desktop" class="fas fa-moon text-xl"></i></button><div id="user-menu" class="hidden"><span id="logged-user-name"></span><button onclick="logout()">Logout</button></div></nav><div class="md:hidden flex gap-4"><button onclick="toggleDarkMode()"><i id="theme-icon-mobile" class="fas fa-moon text-xl"></i></button><button id="mobile-menu-btn"><i class="fas fa-bars text-2xl"></i></button></div></div></div><div id="mobile-menu" class="hidden md:hidden p-4 bg-cream dark:bg-darkCard"><a href="#beranda" class="block p-2">Beranda</a><a href="#filosofi" class="block p-2">Filosofi</a><a href="#galeri" class="block p-2">Galeri Kenangan</a><a href="#anggota" class="block p-2">Anggota Kami</a><div id="mobile-user-menu" class="hidden"><span id="mobile-logged-user-name"></span><button onclick="logout()">Logout</button></div></div></header>
-<main class="pt-20"><section id="beranda" class="page-section min-h-screen flex items-center justify-center text-center p-8 bg-[url('https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"><div class="bg-coffee/70 p-8 rounded-2xl text-white"><p>Since 2020</p><h1 class="text-5xl md:text-7xl font-serif font-bold">Welcome to <span class="text-terracotta">CARKECORS</span> UNITY</h1><p class="text-xl my-6">Lebih dari sekadar teman, kami adalah keluarga.</p><a href="#filosofi" class="bg-terracotta px-6 py-3 rounded-full">Lihat Kisah Kami</a></div></section>
-<section id="filosofi" class="page-section hidden min-h-screen p-8 md:p-24"><div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center"><div><p class="text-terracotta uppercase">Cerita Kami</p><h2 class="text-4xl font-serif font-bold">Makna di Balik CARKECORS UNITY</h2><p class="my-6">CARKECORS berawal dari singkatan nama-nama kami dan rentetan kejadian lucu saat nongkrong berjam-jam tanpa arah. Nama yang terdengar aneh bagi orang lain, namun terasa seperti rumah bagi kami.</p><p>Kata <strong>UNITY</strong> melambangkan persatuan kami yang tak terpisahkan.</p></div><div><img id="filosofi-img" class="rounded-2xl shadow-xl w-full aspect-[4/3] object-cover" alt="Persahabatan"><button id="btn-edit-filosofi" onclick="openEditFilosofiModal()" class="hidden mt-4 bg-terracotta text-white px-4 py-2 rounded-full">Ganti Foto</button></div></div></section>
-<section id="galeri" class="page-section hidden min-h-screen p-8 md:p-24"><div class="max-w-7xl mx-auto text-center"><h2 class="text-4xl font-serif font-bold">Jejak Langkah & Tawa</h2><div class="my-8"><button onclick="switchGalleryTab('photo')" class="bg-terracotta text-white px-5 py-2 rounded-full">Galeri Foto</button><button onclick="switchGalleryTab('video')" class="px-5 py-2 rounded-full">Galeri Video</button></div><div id="section-photo"><button id="btn-add-album" onclick="openAddAlbumModal()" class="hidden bg-terracotta text-white px-4 py-2 rounded-lg mb-6">Tambah Album</button><div class="flex flex-wrap justify-center gap-2 mb-8"><button class="filter-btn bg-coffee text-white px-4 py-2 rounded-full" data-filter="all">Semua</button><button class="filter-btn bg-white px-4 py-2 rounded-full" data-filter="jalan">Jalan-jalan</button><button class="filter-btn bg-white px-4 py-2 rounded-full" data-filter="makan">Makan-makan</button><button class="filter-btn bg-white px-4 py-2 rounded-full" data-filter="random">Random Moments</button></div><div id="gallery-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div></div><div id="section-video" class="hidden"><button id="btn-add-video" onclick="openAddVideoModal()" class="hidden bg-coffee text-white px-4 py-2 rounded-lg mb-6">Tambah Video Baru</button><div id="video-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div></div></div></section>
-<section id="album-detail" class="page-section hidden min-h-screen p-8 md:p-24"><div class="max-w-7xl mx-auto"><a href="#galeri" class="text-terracotta">Kembali ke Galeri</a><button id="btn-add-photo" onclick="openAddPhotoModal()" class="hidden float-right bg-terracotta text-white px-4 py-2 rounded-lg">Tambah Foto</button><h2 id="album-title" class="text-4xl font-serif font-bold text-center mt-8"></h2><p id="album-desc" class="text-center my-4"></p><div id="album-photos" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div></div></section>
-<section id="anggota" class="page-section hidden min-h-screen p-8 md:p-24"><div class="max-w-7xl mx-auto text-center"><button id="btn-add-member" onclick="openAddMemberModal()" class="hidden bg-terracotta text-white px-4 py-2 rounded-lg">Tambah Anggota</button><h2 class="text-4xl font-serif font-bold my-8">Kenali Wajah-wajah CARKECORS</h2><div id="members-container" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"></div></div></section>
-<section id="member-detail" class="page-section hidden min-h-screen p-8 md:p-24"><div class="max-w-4xl mx-auto"><a href="#anggota" class="text-terracotta">Kembali ke Anggota</a><div id="member-profile-card" class="bg-white dark:bg-darkCard rounded-2xl p-8 mt-6"></div></div></section></main>
-<footer class="bg-coffee text-cream text-center p-10"><h2 class="text-3xl font-serif">CARKECORS <span class="text-terracotta">UNITY</span></h2><p class="mt-4">&copy; <span id="year"></span> CARKECORS UNITY</p></footer>
-<div id="login-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4"><div class="bg-white dark:bg-darkCard p-8 rounded-2xl w-full max-w-md"><h3 class="text-2xl font-serif">Login Anggota</h3><input id="login-username" class="w-full p-3 my-3 border" placeholder="ID Anggota / Admin"><input id="login-pin" type="password" class="w-full p-3 border" placeholder="PIN Rahasia"><button onclick="processLogin()" class="w-full bg-terracotta text-white p-3 mt-4 rounded-lg">Masuk</button></div></div>
-<div id="edit-logo-modal" class="modal-shell hidden"><input id="edit-logo-file" type="file"><button onclick="saveLogo()">Simpan Logo</button></div><div id="edit-profile-modal" class="modal-shell hidden"><input id="edit-prof-avatar-file" type="file"><textarea id="edit-prof-quote"></textarea><input id="edit-prof-ig"><input id="edit-prof-tiktok"><input id="edit-prof-pin"><button onclick="saveProfile()">Simpan</button></div><div id="add-album-modal" class="modal-shell hidden"><input id="add-album-title"><select id="add-album-cat"><option value="jalan">Jalan-jalan</option><option value="makan">Makan-makan</option><option value="random">Random Moments</option></select><input id="add-album-desc"><input id="add-album-cover-file" type="file"><button onclick="saveAlbum()">Buat Album</button></div><div id="add-photo-modal" class="modal-shell hidden"><input id="add-photo-file" type="file"><button onclick="savePhoto()">Tambahkan</button></div><div id="add-video-modal" class="modal-shell hidden"><input id="add-video-title"><input id="add-video-desc"><input id="add-video-file" type="file"><button onclick="saveVideo()">Upload Video</button></div><div id="add-personal-photo-modal" class="modal-shell hidden"><input id="add-personal-photo-file" type="file"><button onclick="savePersonalPhoto()">Tambahkan</button></div><div id="edit-filosofi-modal" class="modal-shell hidden"><input id="edit-filosofi-file" type="file"><button onclick="saveFilosofiPhoto()">Simpan</button></div><div id="add-member-modal" class="modal-shell hidden"><input id="add-member-id"><input id="add-member-name"><input id="add-member-role"><input id="add-member-dob"><textarea id="add-member-quote"></textarea><button onclick="saveNewMember()">Tambahkan</button></div><div id="edit-role-modal" class="modal-shell hidden"><input id="edit-role-input"><button onclick="saveRole()">Simpan</button></div>
-<script src="data.js"></script><script src="app.js" defer></script>
+<body class="bg-cream dark:bg-darkBg text-coffee dark:text-gray-200 font-sans antialiased overflow-x-hidden transition-colors duration-300">
+
+    <!-- 1. Header & Navigation Bar -->
+    <header class="fixed w-full top-0 z-50 bg-cream/90 dark:bg-darkBg/90 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo (Sekarang bisa diklik untuk Login) -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="javascript:void(0)" onclick="handleLogoClick()" class="flex items-center gap-2 sm:gap-3 group cursor-pointer" title="Klik untuk Login Anggota">
+                        <img id="main-logo-img" src="https://ui-avatars.com/api/?name=CU&background=C8795A&color=fff&rounded=true&bold=true" alt="Logo Carkecors" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-300 object-cover">
+                        <span class="font-serif text-xl sm:text-2xl font-bold text-coffee dark:text-cream tracking-wider">
+                            CARKECORS <span class="text-terracotta">UNITY</span>
+                        </span>
+                    </a>
+                </div>
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="#beranda" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Beranda</a>
+                    <a href="#filosofi" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Filosofi</a>
+                    <a href="#galeri" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Galeri Kenangan</a>
+                    <a href="#anggota" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Anggota Kami</a>
+                    
+                    <!-- Dark Mode Toggle Button Desktop -->
+                    <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta ml-2 transition-colors outline-none">
+                        <i id="theme-icon-desktop" class="fas fa-moon text-xl"></i>
+                    </button>
+
+                    <!-- User Info (Hidden by default) -->
+                    <div id="user-menu" class="hidden flex items-center gap-3 pl-4 border-l border-sand dark:border-gray-700">
+                        <span id="logged-user-name" class="font-bold text-terracotta text-sm"></span>
+                        <button onclick="logout()" class="text-xs bg-sand dark:bg-darkInput hover:bg-terracotta dark:hover:bg-terracotta text-coffee dark:text-white px-3 py-1 rounded-full transition-colors">Logout</button>
+                    </div>
+                </nav>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center gap-4">
+                    <!-- Dark Mode Toggle Button Mobile -->
+                    <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta outline-none">
+                        <i id="theme-icon-mobile" class="fas fa-moon text-xl"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="text-coffee dark:text-gray-300 hover:text-terracotta focus:outline-none text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Nav (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cream dark:bg-darkCard border-t border-sand dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#beranda" class="block px-3 py-2 text-coffee dark:text-gray-300 hover:bg-sage dark:hover:bg-darkInput hover:text-coffee font-medium rounded-md">Beranda</a>
+                <a href="#filosofi" class="block px-3 py-2 text-coffee dark:text-gray-300 hover:bg-sage dark:hover:bg-darkInput hover:text-coffee font-medium rounded-md">Filosofi</a>
+                <a href="#galeri" class="block px-3 py-2 text-coffee dark:text-gray-300 hover:bg-sage dark:hover:bg-darkInput hover:text-coffee font-medium rounded-md">Galeri Kenangan</a>
+                <a href="#anggota" class="block px-3 py-2 text-coffee dark:text-gray-300 hover:bg-sage dark:hover:bg-darkInput hover:text-coffee font-medium rounded-md">Anggota Kami</a>
+                <div id="mobile-user-menu" class="hidden mt-4 pt-4 border-t border-sand dark:border-gray-800">
+                    <span id="mobile-logged-user-name" class="block text-terracotta font-bold mb-2"></span>
+                    <button onclick="logout()" class="bg-sand dark:bg-darkInput text-coffee dark:text-white px-4 py-1 rounded-full text-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Hero Section -->
+    <section id="beranda" class="page-section relative h-screen min-h-[500px] flex items-center justify-center pt-20">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Group of friends laughing" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-coffee/60 dark:bg-black/70 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-cream dark:from-darkBg via-transparent to-transparent opacity-90"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+            <span class="text-sage dark:text-sand font-medium tracking-widest uppercase mb-4 text-xs sm:text-sm md:text-base animate-pulse">Since 2020</span>
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-white mb-4 sm:mb-6 leading-tight drop-shadow-lg">
+                Welcome to <br/><span class="text-terracotta">CARKECORS</span> UNITY
+            </h1>
+            <p class="text-base sm:text-lg md:text-2xl text-cream/90 mb-8 sm:mb-10 font-light max-w-2xl drop-shadow-md px-2">
+                Lebih dari sekadar teman, kami adalah keluarga. Tempat di mana setiap cerita, tawa, dan perjalanan diabadikan.
+            </p>
+            <a href="#filosofi" class="inline-block bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                Lihat Kisah Kami <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 3. Seksi Filosofi -->
+    <section id="filosofi" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-cream dark:bg-darkBg relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-10 sm:gap-16">
+                <div class="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left">
+                    <h2 class="text-xs sm:text-sm font-bold text-terracotta tracking-widest uppercase mb-2">Cerita Kami</h2>
+                    <h3 class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-4 sm:mb-6">Makna di Balik CARKECORS UNITY</h3>
+                    <p class="text-base sm:text-lg text-coffee/80 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed px-2 md:px-0">
+                        CARKECORS berawal dari singkatan nama-nama kami dan rentetan kejadian lucu yang tak sengaja tercetus saat nongkrong berjam-jam tanpa arah. Nama yang terdengar aneh bagi orang lain, namun terasa seperti "rumah" bagi kami.
+                    </p>
+                    <p class="text-base sm:text-lg text-coffee/80 dark:text-gray-300 leading-relaxed mb-6 sm:mb-8 px-2 md:px-0">
+                        Kata <strong>UNITY</strong> melambangkan persatuan kami yang tak terpisahkan. Walau kami punya sifat yang berbeda-beda—ada yang pendiam, ada yang cerewet, ada yang selalu telat—perbedaan itulah yang menyatukan kami dalam harmoni tawa yang sama.
+                    </p>
+                    <div class="flex items-center justify-center md:justify-start gap-4 text-terracotta">
+                        <i class="fas fa-heart text-xl sm:text-2xl"></i>
+                        <span class="font-serif italic text-lg sm:text-xl text-coffee dark:text-cream">"Satu cerita, sejuta kenangan."</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 order-1 md:order-2 relative px-4 sm:px-0">
+                    <div class="absolute inset-0 bg-sage dark:bg-darkCard rounded-2xl transform translate-x-2 translate-y-2 sm:translate-x-4 sm:translate-y-4"></div>
+                    <img id="filosofi-img" src="https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Friendship Silhouette" class="relative z-10 rounded-2xl shadow-xl w-full h-auto object-cover aspect-[4/3]" />
+                    
+                    <!-- Tombol Edit Filosofi (Muncul Jika Login) -->
+                    <button id="btn-edit-filosofi" onclick="openEditFilosofiModal()" class="hidden absolute top-4 right-6 sm:right-4 bg-white dark:bg-darkCard border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white px-3 py-2 rounded-full font-bold shadow-md transition-colors z-20 items-center gap-2 text-xs sm:text-base">
+                        <i class="fas fa-camera"></i> Ganti Foto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Seksi Galeri Kenangan -->
+    <section id="galeri" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative flex flex-col items-center">
+            
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-4 mt-2 md:mt-0">Jejak Langkah & Tawa</h2>
+            <p class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto px-2">Kepingan memori visual dari setiap perjalanan, piring kosong, dan hal-hal konyol yang kita lakukan bersama.</p>
+            
+            <!-- TABS PHOTO / VIDEO -->
+            <div class="flex justify-center mb-8 sm:mb-12 w-full">
+                <div class="bg-sand/30 dark:bg-darkCard rounded-full p-1 inline-flex shadow-inner">
+                    <button id="tab-btn-photo" onclick="switchGalleryTab('photo')" class="px-6 py-2 rounded-full bg-terracotta text-white font-bold transition-all duration-300">Galeri Foto</button>
+                    <button id="tab-btn-video" onclick="switchGalleryTab('video')" class="px-6 py-2 rounded-full text-coffee dark:text-gray-300 font-bold transition-all duration-300 hover:text-terracotta">Galeri Video</button>
+                </div>
+            </div>
+
+            <!-- BAGIAN FOTO -->
+            <div id="section-photo" class="w-full relative">
+                <!-- Tombol Tambah Album (Muncul Jika Login) -->
+                <button id="btn-add-album" onclick="openAddAlbumModal()" class="hidden relative md:absolute right-auto md:right-0 -top-20 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max mx-auto md:mx-0">
+                    <i class="fas fa-plus"></i> Tambah Album
+                </button>
+
+                <p class="text-terracotta font-semibold text-xs sm:text-sm animate-pulse mb-6">(Klik foto untuk membuka album)</p>
+                
+                <!-- Filters -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12" id="gallery-filters">
+                    <button class="filter-btn active bg-coffee text-white px-4 py-2 sm:px-6 text-sm sm:text-base rounded-full font-semibold transition-colors" data-filter="all">Semua</button>
+                    <button class="filter-btn bg-white dark:bg-darkCard text-coffee dark:text-gray-300 hover:bg-sand dark:hover:bg-darkInput px-4 py-2 sm:px-6 text-sm sm:text-base rounded-full font-semibold shadow-sm transition-colors" data-filter="jalan">Jalan-jalan</button>
+                    <button class="filter-btn bg-white dark:bg-darkCard text-coffee dark:text-gray-300 hover:bg-sand dark:hover:bg-darkInput px-4 py-2 sm:px-6 text-sm sm:text-base rounded-full font-semibold shadow-sm transition-colors" data-filter="makan">Makan-makan</button>
+                    <button class="filter-btn bg-white dark:bg-darkCard text-coffee dark:text-gray-300 hover:bg-sand dark:hover:bg-darkInput px-4 py-2 sm:px-6 text-sm sm:text-base rounded-full font-semibold shadow-sm transition-colors" data-filter="random">Random Moments</button>
+                </div>
+
+                <!-- Masonry/Polaroid Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full" id="gallery-container">
+                    <!-- Diisi oleh JS -->
+                </div>
+            </div>
+
+            <!-- BAGIAN VIDEO -->
+            <div id="section-video" class="w-full hidden relative">
+                <!-- Tombol Tambah Video -->
+                <button id="btn-add-video" onclick="openAddVideoModal()" class="hidden relative md:absolute right-auto md:right-0 -top-20 mb-6 md:mb-0 bg-coffee hover:bg-terracotta text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max mx-auto md:mx-0">
+                    <i class="fas fa-video"></i> Tambah Video Baru
+                </button>
+                
+                <!-- Grid Video -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full text-left" id="video-container">
+                    <!-- Diisi oleh JS -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4b. Seksi Detail Album -->
+    <section id="album-detail" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative flex flex-col items-center md:block">
+            <!-- Tombol Kembali -->
+            <div class="w-full text-left md:text-left md:mb-8 mb-4">
+                <a href="#galeri" class="inline-flex items-center text-terracotta hover:text-coffee dark:hover:text-cream font-semibold transition-colors text-sm sm:text-base">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Galeri Utama
+                </a>
+            </div>
+            
+            <!-- Tombol Tambah Foto (Muncul Jika Login) -->
+            <button id="btn-add-photo" onclick="openAddPhotoModal()" class="hidden relative md:absolute right-auto md:right-4 top-auto md:top-24 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 w-max">
+                <i class="fas fa-camera"></i> Tambah Foto
+            </button>
+
+            <!-- Header Album -->
+            <div class="text-center mb-8 sm:mb-12 w-full">
+                <h2 id="album-title" class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-3 sm:mb-4">Judul Album</h2>
+                <p id="album-desc" class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 max-w-2xl mx-auto px-2">Deskripsi album.</p>
+            </div>
+
+            <!-- Grid Foto Dalam Album -->
+            <div id="album-photos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+                <!-- Foto-foto disisipkan oleh JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Seksi Anggota -->
+    <section id="anggota" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-cream dark:bg-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative flex flex-col items-center">
+            
+            <!-- Tombol Tambah Anggota (Khusus Admin) -->
+            <button id="btn-add-member" onclick="openAddMemberModal()" class="hidden relative md:absolute right-auto md:right-4 top-0 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max">
+                <i class="fas fa-user-plus"></i> Tambah Anggota
+            </button>
+
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-4 mt-2 md:mt-0">Kenali Wajah-wajah CARKECORS</h2>
+            <p class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 mb-10 sm:mb-16 max-w-2xl mx-auto px-2">Karakter berbeda, isi kepala berbeda, tapi entah kenapa bisa cocok.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 w-full" id="members-container">
+                <!-- Data anggota dirender otomatis oleh JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 5b. Seksi Detail Profil Anggota -->
+    <section id="member-detail" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <a href="#anggota" class="inline-flex items-center text-terracotta hover:text-coffee dark:hover:text-cream font-semibold mb-6 sm:mb-8 transition-colors text-sm sm:text-base">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Anggota
+            </a>
+            
+            <div class="bg-white dark:bg-darkCard rounded-3xl p-6 sm:p-10 shadow-xl border-t-8 border-terracotta relative overflow-hidden flex flex-col items-center md:block" id="member-profile-card">
+                <!-- Konten disisipkan oleh JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer -->
+    <footer class="bg-coffee dark:bg-[#0c0a09] text-cream py-12 border-t-4 border-terracotta">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+            <h2 class="text-3xl font-serif font-bold mb-4">CARKECORS <span class="text-terracotta">UNITY</span></h2>
+            <p class="text-cream/70 text-lg mb-8 italic">"Together since 2020."</p>
+            
+            <!-- Akun Media Sosial CARKECORS -->
+            <div class="flex justify-center gap-4 mb-8">
+                <a href="https://instagram.com/carkecors" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
+                    <i class="fab fa-instagram text-xl"></i> @carkecors
+                </a>
+                <a href="https://tiktok.com/@carkecors" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-black dark:bg-[#1a1a1a] text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border dark:border-gray-800">
+                    <i class="fab fa-tiktok text-xl"></i> @carkecors
+                </a>
+            </div>
+            
+            <div class="border-t border-cream/20 dark:border-gray-800 w-full max-w-md pt-8">
+                <p class="text-sm text-cream/50">
+                    &copy; <span id="year"></span> CARKECORS UNITY. All Memories Reserved.
+                </p>
+                <p class="text-xs text-cream/30 mt-2">Dibuat dengan penuh memori dan tawa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS SECTION -->
+    
+    <!-- 1. Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Login Anggota</h3>
+                <button onclick="closeModal('login-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Masuk untuk mengedit profil atau menambah galeri.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">ID Anggota / Admin</label>
+                    <input type="text" id="login-username" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-2 focus:ring-terracotta outline-none" placeholder="Ketik panggilan (misal: sabiq)">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">PIN Rahasia</label>
+                    <input type="password" id="login-pin" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-2 focus:ring-terracotta outline-none" placeholder="Masukkan PIN">
+                </div>
+                <button onclick="processLogin()" class="w-full bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Masuk Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1b. Edit Logo Modal (Khusus Admin) -->
+    <div id="edit-logo-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Ubah Logo Website</h3>
+                <button onclick="closeModal('edit-logo-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Logo Baru</label>
+                    <input type="file" id="edit-logo-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Disarankan rasio kotak (1:1).</p>
+                </div>
+                <button onclick="saveLogo()" class="w-full bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Simpan Logo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Edit Profil</h3>
+                <button onclick="closeModal('edit-profile-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Foto Profil (Opsional)</label>
+                    <input type="file" id="edit-prof-avatar-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin mengubah foto saat ini.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Quote Pilihan</label>
+                    <textarea id="edit-prof-quote" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Username IG (tanpa @)</label>
+                    <input type="text" id="edit-prof-ig" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm">
+                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin ditampilkan.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Username TikTok (tanpa @)</label>
+                    <input type="text" id="edit-prof-tiktok" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm">
+                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin ditampilkan.</p>
+                </div>
+                <div class="pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1 text-terracotta">Ubah PIN Login</label>
+                    <input type="text" id="edit-prof-pin" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Masukkan PIN baru">
+                </div>
+                <button onclick="saveProfile()" class="w-full bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Add Album Modal -->
+    <div id="add-album-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Album Foto</h3>
+                <button onclick="closeModal('add-album-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Judul Album</label>
+                    <input type="text" id="add-album-title" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Contoh: Bukber 2024">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Kategori</label>
+                    <select id="add-album-cat" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none">
+                        <option value="jalan">Jalan-jalan</option>
+                        <option value="makan">Makan-makan</option>
+                        <option value="random">Random Moments</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Deskripsi Singkat</label>
+                    <input type="text" id="add-album-desc" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Cerita singkat acara ini...">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Upload Foto Sampul (Maks 100MB)</label>
+                    <input type="file" id="add-album-cover-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                </div>
+                <button onclick="saveAlbum()" class="w-full bg-sage dark:bg-terracotta hover:bg-terracotta dark:hover:bg-coffee text-coffee dark:text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Buat Album
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Add Photo Modal -->
+    <div id="add-photo-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Foto ke Album</h3>
+                <button onclick="closeModal('add-photo-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto (Maks 100MB)</label>
+                    <input type="file" id="add-photo-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                </div>
+                <button onclick="savePhoto()" class="w-full bg-sand hover:bg-terracotta text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Tambahkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4b. Add Video Modal (Baru) -->
+    <div id="add-video-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Video (Maks 5GB)</h3>
+                <button onclick="closeModal('add-video-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Judul Video</label>
+                    <input type="text" id="add-video-title" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Judul Video">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Keterangan Singkat</label>
+                    <input type="text" id="add-video-desc" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Keterangan singkat">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Video (Maks 5GB)</label>
+                    <input type="file" id="add-video-file" accept="video/mp4, video/webm, video/ogg, video/quicktime" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                </div>
+                <button onclick="saveVideo()" class="w-full bg-coffee hover:bg-terracotta text-white font-bold py-3 rounded-lg mt-4">Upload Video</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Add Personal Photo Modal -->
+    <div id="add-personal-photo-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Foto Pribadi</h3>
+                <button onclick="closeModal('add-personal-photo-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto (Maks 100MB)</label>
+                    <input type="file" id="add-personal-photo-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                </div>
+                <button onclick="savePersonalPhoto()" class="w-full bg-sand hover:bg-terracotta text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Tambahkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Edit Filosofi Photo Modal -->
+    <div id="edit-filosofi-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Ubah Foto Filosofi</h3>
+                <button onclick="closeModal('edit-filosofi-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto Baru</label>
+                    <input type="file" id="edit-filosofi-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
+                </div>
+                <button onclick="saveFilosofiPhoto()" class="w-full bg-terracotta hover:bg-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Add Member Modal (Khusus Admin) -->
+    <div id="add-member-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Anggota Baru</h3>
+                <button onclick="closeModal('add-member-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">ID Panggilan <span class="text-red-500">*</span></label>
+                    <input type="text" id="add-member-id" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Ketik huruf kecil (misal: dimas)">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                    <input type="text" id="add-member-name" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Nama lengkap anggota">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Peran / Julukan</label>
+                    <input type="text" id="add-member-role" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Contoh: Si Paling Rajin">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Tanggal Lahir</label>
+                    <input type="text" id="add-member-dob" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Contoh: 01 Januari 2002">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Quote</label>
+                    <textarea id="add-member-quote" rows="2" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Kata-kata andalan"></textarea>
+                </div>
+                <button onclick="saveNewMember()" class="w-full bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Tambahkan Anggota
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Edit Role Modal (Khusus Admin) -->
+    <div id="edit-role-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
+        <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Ubah Julukan / Peran</h3>
+                <button onclick="closeModal('edit-role-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Julukan Baru</label>
+                    <input type="text" id="edit-role-input" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Contoh: Si Paling Rajin">
+                </div>
+                <button onclick="saveRole()" class="w-full bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white font-bold py-3 rounded-lg transition-colors mt-4">
+                    Simpan Julukan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Konstanta Ukuran File
+        const MAX_PHOTO_SIZE = 100 * 1024 * 1024; // 100 MB
+        const MAX_VIDEO_SIZE = 5 * 1024 * 1024 * 1024; // 5 GB
+
+        // --- DATA & STATE MANAGEMENT ---
+        const defaultMembers = {
+            'sabiq': { name: 'Sabiq Faruq Al-Fawwaz', role: 'Si Paling Santai', dob: '12 Januari 2002', quote: '"Jalani aja dulu, nanti juga sampai."', ig: 'el_f4rw4zsa', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80'] },
+            'reval': { name: 'Reval Fathurrahman Yakub', role: 'Tukang Makan', dob: '05 Maret 2002', quote: '"Ada yang mau ngabisin nggak? Sini buat gue."', ig: 'revalfathur', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80'] },
+            'fajri': { name: 'Fajri Nur Rohman', role: 'Seksi Sibuk', dob: '22 April 2002', quote: '"Jadwal padat merayap bosku."', ig: 'fajrinur', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&q=80'] },
+            'adam': { name: 'Adam Gumay Al Bukhori', role: 'Si Paling Random', dob: '17 Agustus 2002', quote: '"Tau nggak bedanya ikan sama kamu?"', ig: 'adamgumay', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1528892952291-009c663ce843?auto=format&fit=crop&w=400&q=80'] },
+            'abdurrahman': { name: 'Abdurrahman Fakhriy', role: 'Penasihat Spiritual', dob: '09 September 2001', quote: '"Jangan lupa ibadah, dunia sementara."', ig: 'abdurrahman.f', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80'] },
+            'reihan': { name: 'Reihan Azzam Arrayan', role: 'Musisi Tongkrongan', dob: '30 Oktober 2002', quote: '"Genjreng dulu sebatang dua batang."', ig: 'reihanazzam', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80'] },
+            'rahma': { name: 'Siti Rahmawati', role: 'Ibu Negara', dob: '14 Februari 2002', quote: '"aku memilih bertahan lalu bertumbuh"', ig: 'sitirahma_wati', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'] },
+            'nuraeni': { name: 'Siti Nuraeni', role: 'Bendahara Galak', dob: '25 Mei 2002', quote: '"Bayar kas woy! Udah nunggak 3 bulan!"', ig: 'sitinuraeni', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80'] },
+            'salsa': { name: 'Salsabila Mudzakir', role: 'Kang Foto / Estetik', dob: '11 November 2002', quote: '"Eh bentar, estetik nih, foto dulu dong!"', ig: 'salsabila.m', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80'] },
+            'neneng': { name: 'Neneng Kholisa Sriwahyuni', role: 'Seksi Repot / EO', dob: '03 Juli 2002', quote: '"Pokoknya besok pake baju warna senada ya!"', ig: 'nenengkholisa', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1517365830460-955ce3ccd263?auto=format&fit=crop&w=400&q=80'] },
+            'sobur': { name: 'Sobur', role: 'Si Paling Telat', dob: '08 Desember 2001', quote: '"OTW guys (padahal baru mandi)."', ig: 'sobur_sbr', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'] },
+            'syariful': { name: 'Syariful Alamsyah', role: 'Kang Tidur', dob: '21 Juni 2002', quote: '"Bangunin gue kalau udah mateng ya."', ig: 'laammsyaah', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1504257432389-523431e5f250?auto=format&fit=crop&w=400&q=80'] },
+            'nazir': { name: 'Nazir Sadad', role: 'Gamer Sejati', dob: '02 Februari 2002', quote: '"Bentar nanggung, satu match lagi bos."', ig: 'nazirsadad', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1488161628813-04466f87258a?auto=format&fit=crop&w=400&q=80'] },
+            'syamil': { name: 'Syamil Sayyafi', role: 'Si Pendiam Menghanyutkan', dob: '19 September 2002', quote: '"Hmm... Yaudah gas aja."', ig: 'syamilsayyafi', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=400&q=80'] }
+        };
+
+        const defaultAlbums = {
+            'bandung': { category: 'jalan', title: 'Trip Bandung 2023', desc: 'Momen kedinginan tapi seru waktu keliling Lembang.', cover: 'https://images.unsplash.com/photo-1527525443983-6e60c75fff50?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1527525443983-6e60c75fff50?auto=format&fit=crop&w=600&q=80', 'https://images.unsplash.com/photo-1517523961730-8be89ed7a83d?auto=format&fit=crop&w=600&q=80'] },
+            'pantai': { category: 'jalan', title: 'Pelarian ke Pantai', desc: 'Berangkat dadakan, nggak bawa baju ganti.', cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80'] },
+            'nongkrong': { category: 'makan', title: 'Nongkrong Pagi Buta', desc: 'Ngopi dari sore sampai tutup cafe.', cover: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80'] },
+            'ultah': { category: 'makan', title: 'Kejutan Ulang Tahun', desc: 'Traktiran paling brutal tahun ini.', cover: 'https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=600&q=80'] },
+            'jelek': { category: 'random', title: 'Kompilasi Muka Jelek', desc: 'Aib kita semua ada di sini.', cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80'] },
+            'tepar': { category: 'random', title: 'Tepar Berjamaah', desc: 'Habis begadang ngerjain tugas.', cover: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=600&q=80', photos: ['https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=600&q=80'] }
+        };
+
+        const defaultVideos = [
+            { title: "Kompilasi Ketawa", desc: "Ketawa bareng gak jelas", src: "https://www.w3schools.com/html/mov_bbb.mp4" }
+        ];
+
+        // Initialize Database & Current User
+        let db = {
+            members: JSON.parse(localStorage.getItem('cu_members')) || defaultMembers,
+            albums: JSON.parse(localStorage.getItem('cu_albums')) || defaultAlbums,
+            videos: JSON.parse(localStorage.getItem('cu_videos')) || defaultVideos,
+            settings: JSON.parse(localStorage.getItem('cu_settings')) || {
+                filosofiPhoto: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                logoUrl: '' 
+            }
+        };
+        let currentUserKey = localStorage.getItem('cu_currentUser') || null;
+        let activeAlbumKey = null; 
+        let activeMemberKey = null; 
+
+        window.history.replaceState(null, null, ' '); 
+        window.location.hash = 'beranda';
+
+        // Tema badge solid untuk peran (Role)
+        const themeStyles = [
+            { border: 'border-terracotta', badgeBg: 'bg-terracotta', badgeText: 'text-white' },
+            { border: 'border-sage', badgeBg: 'bg-sage', badgeText: 'text-coffee' },
+            { border: 'border-sand', badgeBg: 'bg-sand', badgeText: 'text-coffee' },
+            { border: 'border-coffee', badgeBg: 'bg-coffee', badgeText: 'text-cream' }
+        ];
+
+        function renderAll() {
+            updateNavbarState();
+            renderLogo();
+            renderMembers();
+            renderGallery();
+            renderVideos();
+            
+            // Render Filosofi Photo
+            const filosofiImg = document.getElementById('filosofi-img');
+            if (filosofiImg && db.settings && db.settings.filosofiPhoto) {
+                filosofiImg.src = db.settings.filosofiPhoto;
+            }
+        }
+
+        // --- RENDER FUNCTIONS ---
+        
+        function renderLogo() {
+            const logoImg = document.getElementById('main-logo-img');
+            if(logoImg) {
+                if (db.settings.logoUrl && db.settings.logoUrl.trim() !== '') {
+                    logoImg.src = db.settings.logoUrl;
+                } else {
+                    logoImg.src = 'https://ui-avatars.com/api/?name=CU&background=C8795A&color=fff&rounded=true&bold=true';
+                }
+            }
+        }
+
+        function getAvatarUrl(memberKey, data) {
+            if (data.avatarUrl && data.avatarUrl.trim() !== '') return data.avatarUrl;
+            return `https://ui-avatars.com/api/?name=${data.name.replace(/ /g, '+')}&background=E3E7D3&color=4A3F35&size=300&bold=true`;
+        }
+
+        function renderMembers() {
+            const container = document.getElementById('members-container');
+            if (!container) return;
+            container.innerHTML = ''; 
+            
+            let i = 0;
+            for (const [key, data] of Object.entries(db.members)) {
+                const theme = themeStyles[i % themeStyles.length];
+                const mainPhotoUrl = getAvatarUrl(key, data);
+                const shortName = data.name.split(' ').slice(0, 2).join(' ');
+
+                let socialBadgesHTML = '';
+                if (data.ig && data.ig.trim() !== '') {
+                    socialBadgesHTML += `<span class="text-pink-600 dark:text-pink-300 text-[11px] font-semibold bg-pink-50 dark:bg-pink-900/40 px-2 py-1 rounded-full border border-pink-100 dark:border-pink-800 flex items-center gap-1"><i class="fab fa-instagram"></i>@${data.ig}</span>`;
+                }
+                if (data.tiktok && data.tiktok.trim() !== '') {
+                    socialBadgesHTML += `<span class="text-gray-800 dark:text-gray-300 text-[11px] font-semibold bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full border border-gray-300 dark:border-gray-600 flex items-center gap-1"><i class="fab fa-tiktok"></i>@${data.tiktok}</span>`;
+                }
+
+                const html = `
+                    <a href="#member-${key}" class="block bg-white dark:bg-darkCard rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-b-4 ${theme.border} group cursor-pointer text-center transform hover:-translate-y-2">
+                        <div class="relative w-28 h-28 mx-auto mb-5 overflow-hidden rounded-full border-4 border-cream dark:border-gray-700 shadow-md">
+                            <img src="${mainPhotoUrl}" alt="${data.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-coffee dark:text-cream truncate mb-2" title="${data.name}">${shortName}</h3>
+                        
+                        <span class="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold ${theme.badgeBg} ${theme.badgeText} uppercase tracking-widest mb-3 shadow-sm">${data.role}</span>
+                        
+                        <p class="text-coffee/70 dark:text-gray-400 text-sm italic line-clamp-2 mt-1">"${data.quote.replace(/"/g, '')}"</p>
+                        <div class="mt-3 flex flex-wrap justify-center gap-2">
+                            ${socialBadgesHTML}
+                        </div>
+                    </a>
+                `;
+                container.innerHTML += html;
+                i++;
+            }
+        }
+
+        // --- SISTEM TAB GALERI ---
+        function switchGalleryTab(tabType) {
+            const btnPhoto = document.getElementById('tab-btn-photo');
+            const btnVideo = document.getElementById('tab-btn-video');
+            const secPhoto = document.getElementById('section-photo');
+            const secVideo = document.getElementById('section-video');
+
+            if (tabType === 'photo') {
+                secPhoto.classList.remove('hidden');
+                secVideo.classList.add('hidden');
+                btnPhoto.classList.replace('text-coffee', 'text-white');
+                btnPhoto.classList.replace('bg-transparent', 'bg-terracotta');
+                btnVideo.classList.replace('text-white', 'text-coffee');
+                btnVideo.classList.replace('bg-terracotta', 'bg-transparent');
+            } else {
+                secVideo.classList.remove('hidden');
+                secPhoto.classList.add('hidden');
+                btnVideo.classList.replace('text-coffee', 'text-white');
+                btnVideo.classList.replace('bg-transparent', 'bg-terracotta');
+                btnPhoto.classList.replace('text-white', 'text-coffee');
+                btnPhoto.classList.replace('bg-terracotta', 'bg-transparent');
+            }
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            for (const [key, data] of Object.entries(db.albums)) {
+                const html = `
+                    <a href="#album-${key}" class="gallery-item polaroid bg-white dark:bg-darkCard block w-full cursor-pointer" data-category="${data.category}">
+                        <img src="${data.cover}" alt="${data.title}" class="w-full h-64 object-cover mb-4 rounded-sm">
+                        <p class="font-serif text-xl font-bold text-coffee dark:text-cream">${data.title}</p>
+                        <p class="text-sm text-coffee/60 dark:text-gray-400">${data.desc}</p>
+                    </a>
+                `;
+                container.innerHTML += html;
+            }
+            
+            document.getElementById('btn-add-album').classList.toggle('hidden', !currentUserKey);
+        }
+
+        function renderVideos() {
+            const container = document.getElementById('video-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            db.videos.forEach((vid) => {
+                container.innerHTML += `
+                    <div class="bg-white dark:bg-darkCard rounded-xl overflow-hidden shadow-lg p-4 border border-sand dark:border-gray-700">
+                        <video controls class="w-full h-48 md:h-56 object-cover rounded-lg mb-4 bg-black">
+                            <source src="${vid.src}" type="video/mp4">
+                            Browser kamu tidak support tag video.
+                        </video>
+                        <h4 class="font-bold font-serif text-coffee dark:text-cream text-xl">${vid.title}</h4>
+                        <p class="text-sm text-gray-500 mt-1">${vid.desc}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('btn-add-video').classList.toggle('hidden', !currentUserKey);
+        }
+
+        function loadMemberData(memberKey) {
+            const data = db.members[memberKey];
+            if(!data) { window.location.hash = 'anggota'; return; }
+            activeMemberKey = memberKey;
+
+            const profileCard = document.getElementById('member-profile-card');
+            const mainPhotoUrl = getAvatarUrl(memberKey, data);
+            
+            let photosHTML = '';
+            data.photos.forEach(photo => {
+                photosHTML += `
+                    <div class="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                        <img src="${photo}" alt="Momen ${data.name}" class="w-full h-48 sm:h-64 object-cover hover:scale-110 transition-transform duration-500">
+                    </div>
+                `;
+            });
+
+            let editButtonHTML = '';
+            let addPersonalPhotoButtonHTML = ''; 
+            if (currentUserKey === memberKey || currentUserKey === 'admin') {
+                editButtonHTML = `
+                    <button onclick="openEditProfileModal()" class="relative md:absolute mt-4 md:mt-0 mb-6 md:mb-0 top-auto md:top-6 right-auto md:right-6 bg-white dark:bg-darkInput border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white px-4 py-2 rounded-full font-bold shadow-md transition-colors z-20 flex items-center gap-2 w-max mx-auto md:mx-0 text-sm sm:text-base">
+                        <i class="fas fa-edit"></i> Edit Profil
+                    </button>
+                `;
+                addPersonalPhotoButtonHTML = `
+                    <button onclick="openAddPersonalPhotoModal()" class="ml-2 sm:ml-4 bg-terracotta hover:bg-coffee dark:hover:bg-sand dark:hover:text-coffee text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold shadow-md transition-colors flex items-center gap-2 w-max">
+                        <i class="fas fa-plus"></i> Foto
+                    </button>
+                `;
+            }
+
+            let editRoleBtnHTML = '';
+            if (currentUserKey === 'admin') {
+                editRoleBtnHTML = `
+                    <button onclick="openEditRoleModal()" class="ml-3 text-terracotta hover:text-coffee dark:hover:text-cream transition-colors text-sm sm:text-base flex-shrink-0" title="Edit Julukan (Admin Only)">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                `;
+            }
+
+            profileCard.innerHTML = `
+                ${editButtonHTML}
+                <div class="flex flex-col md:flex-row gap-6 sm:gap-8 items-center md:items-start mb-8 sm:mb-12 border-b border-sand dark:border-gray-700 pb-8 sm:pb-12 mt-2 md:mt-0">
+                    <div class="flex-shrink-0 relative w-32 h-32 sm:w-48 sm:h-48 md:w-56 md:h-56">
+                        <img src="${mainPhotoUrl}" alt="${data.name}" class="w-full h-full object-cover rounded-full border-4 sm:border-8 border-cream dark:border-gray-700 shadow-xl z-10 relative">
+                    </div>
+                    <div class="flex-grow text-center md:text-left mt-2 md:mt-0 w-full">
+                        <h2 class="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-coffee dark:text-cream mb-2 sm:mb-3 leading-tight">${data.name}</h2>
+                        
+                        <div class="flex items-center justify-center md:justify-start mb-4 sm:mb-6">
+                            <span class="inline-block px-4 sm:px-5 py-1.5 sm:py-2 bg-coffee dark:bg-sand text-white dark:text-coffee font-bold rounded-full text-xs sm:text-sm tracking-widest uppercase shadow-sm">${data.role}</span>
+                            ${editRoleBtnHTML}
+                        </div>
+                        
+                        <div class="space-y-4 sm:space-y-5">
+                            <div class="flex items-start justify-center md:justify-start text-coffee dark:text-gray-200 text-base sm:text-lg bg-cream/50 dark:bg-black/30 p-3 sm:p-4 rounded-xl border-l-4 border-terracotta">
+                                <i class="fas fa-quote-left text-terracotta text-xl sm:text-2xl w-6 sm:w-8 text-center mr-2 sm:mr-3 mt-1 flex-shrink-0"></i>
+                                <span class="italic font-serif leading-relaxed">"${data.quote.replace(/"/g, '')}"</span>
+                            </div>
+                            <div class="pt-2 flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3">
+                                ${data.ig && data.ig.trim() !== '' ? `
+                                <a href="https://instagram.com/${data.ig}" target="_blank" class="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 text-xs sm:text-base">
+                                    <i class="fab fa-instagram text-lg sm:text-xl"></i> @${data.ig}
+                                </a>` : ''}
+                                
+                                ${data.tiktok && data.tiktok.trim() !== '' ? `
+                                <a href="https://tiktok.com/@${data.tiktok}" target="_blank" class="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-black dark:bg-[#1a1a1a] text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border dark:border-gray-800 text-xs sm:text-base">
+                                    <i class="fab fa-tiktok text-lg sm:text-xl"></i> @${data.tiktok}
+                                </a>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full">
+                    <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-0 mb-6">
+                        <h3 class="text-xl sm:text-2xl font-serif font-bold text-coffee dark:text-cream flex items-center">
+                            <i class="fas fa-camera-retro text-terracotta mr-2 sm:mr-3"></i> Galeri Momen ${data.name.split(' ')[0]}
+                        </h3>
+                        ${addPersonalPhotoButtonHTML}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                        ${photosHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadAlbumData(albumKey) {
+            const data = db.albums[albumKey];
+            if(!data) { window.location.hash = 'galeri'; return; }
+            activeAlbumKey = albumKey;
+
+            document.getElementById('album-title').textContent = data.title;
+            document.getElementById('album-desc').textContent = data.desc;
+            
+            const photoContainer = document.getElementById('album-photos');
+            photoContainer.innerHTML = ''; 
+            
+            data.photos.forEach(photoUrl => {
+                const imgHTML = `
+                    <div class="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <img src="${photoUrl}" alt="Momen" class="w-full h-72 object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                `;
+                photoContainer.innerHTML += imgHTML;
+            });
+
+            document.getElementById('btn-add-photo').classList.toggle('hidden', !currentUserKey);
+        }
+
+        // --- ROUTING ---
+        function showPage(pageId) {
+            const pages = ['beranda', 'filosofi', 'galeri', 'anggota', 'album-detail', 'member-detail'];
+            let sectionToShow = pageId;
+            let navToHighlight = pageId;
+            
+            if (pageId.startsWith('album-')) {
+                sectionToShow = 'album-detail'; navToHighlight = 'galeri'; 
+                loadAlbumData(pageId.replace('album-', '')); 
+            } else if (pageId.startsWith('member-')) {
+                sectionToShow = 'member-detail'; navToHighlight = 'anggota'; 
+                loadMemberData(pageId.replace('member-', '')); 
+            } else if (!pages.includes(pageId)) {
+                sectionToShow = 'beranda'; navToHighlight = 'beranda';
+            }
+
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+
+            const activePage = document.getElementById(sectionToShow);
+            if (activePage) activePage.classList.remove('hidden');
+
+            document.querySelectorAll('nav .nav-link, #mobile-menu a').forEach(link => {
+                if (link.getAttribute('href') === '#' + navToHighlight) {
+                    link.classList.add('text-terracotta', 'dark:text-terracotta');
+                    link.classList.remove('text-coffee', 'dark:text-gray-300');
+                } else {
+                    link.classList.add('text-coffee', 'dark:text-gray-300');
+                    link.classList.remove('text-terracotta', 'dark:text-terracotta');
+                }
+            });
+
+            window.scrollTo(0, 0);
+        }
+
+        function handleRoute() {
+            const hash = window.location.hash.substring(1) || 'beranda';
+            showPage(hash);
+        }
+
+        // --- LOGIN & AUTH LOGIC ---
+        function handleLogoClick() {
+            if (currentUserKey === 'admin') {
+                openEditLogoModal();
+            } else if (currentUserKey) {
+                window.location.hash = `member-${currentUserKey}`;
+            } else {
+                openLoginModal();
+            }
+        }
+
+        function updateNavbarState() {
+            const userMenu = document.getElementById('user-menu');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            const btnEditFilosofi = document.getElementById('btn-edit-filosofi');
+            const btnAddMember = document.getElementById('btn-add-member');
+            
+            if (currentUserKey === 'admin') {
+                document.getElementById('logged-user-name').textContent = `Hi, Admin`;
+                document.getElementById('mobile-logged-user-name').textContent = `Hi, Admin`;
+                userMenu.classList.remove('hidden');
+                mobileUserMenu.classList.remove('hidden');
+                
+                if(btnEditFilosofi) {
+                    btnEditFilosofi.classList.remove('hidden');
+                    btnEditFilosofi.classList.add('flex');
+                }
+                if(btnAddMember) btnAddMember.classList.remove('hidden');
+                
+            } else if (currentUserKey && db.members[currentUserKey]) {
+                const name = db.members[currentUserKey].name.split(' ')[0];
+                document.getElementById('logged-user-name').textContent = `Hi, ${name}`;
+                document.getElementById('mobile-logged-user-name').textContent = `Hi, ${name}`;
+                userMenu.classList.remove('hidden');
+                mobileUserMenu.classList.remove('hidden');
+                
+                if(btnEditFilosofi) {
+                    btnEditFilosofi.classList.remove('hidden');
+                    btnEditFilosofi.classList.add('flex');
+                }
+                if(btnAddMember) btnAddMember.classList.add('hidden');
+            } else {
+                userMenu.classList.add('hidden');
+                mobileUserMenu.classList.add('hidden');
+                
+                if(btnEditFilosofi) {
+                    btnEditFilosofi.classList.add('hidden');
+                    btnEditFilosofi.classList.remove('flex');
+                }
+                if(btnAddMember) btnAddMember.classList.add('hidden');
+            }
+        }
+
+        function processLogin() {
+            const userKey = document.getElementById('login-username').value.trim().toLowerCase();
+            const pin = document.getElementById('login-pin').value;
+
+            if (!userKey) return alert('Silakan ketikkan ID panggilan kamu!');
+
+            if (userKey === 'carkecorsunity') {
+                if (pin === '12345678') {
+                    currentUserKey = 'admin';
+                    localStorage.setItem('cu_currentUser', 'admin');
+                    closeModal('login-modal');
+                    renderAll();
+                    window.location.hash = 'anggota'; 
+                    return;
+                } else {
+                    return alert('PIN Admin Salah!');
+                }
+            }
+
+            const user = db.members[userKey];
+            if (!user) return alert('ID tidak ditemukan! Pastikan nama panggilan diketik kecil semua (contoh: sabiq, reval)');
+
+            const correctPin = user.pin || '1234';
+
+            if (pin === correctPin) {
+                currentUserKey = userKey;
+                localStorage.setItem('cu_currentUser', userKey);
+                closeModal('login-modal');
+                renderAll();
+                window.location.hash = `member-${userKey}`;
+            } else {
+                alert('PIN Salah! Silakan coba lagi.');
+            }
+        }
+
+        function logout() {
+            currentUserKey = null;
+            localStorage.removeItem('cu_currentUser');
+            renderAll();
+            window.location.hash = 'beranda';
+        }
+
+        // --- MODAL & DATA LOGIC ---
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function openLoginModal() {
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-pin').value = '';
+            openModal('login-modal');
+        }
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function openEditLogoModal() {
+            document.getElementById('edit-logo-file').value = '';
+            openModal('edit-logo-modal');
+        }
+
+        async function saveLogo() {
+            const fileInput = document.getElementById('edit-logo-file');
+            if(!fileInput.files[0]) return alert("Pilih gambar logo terlebih dahulu!");
+
+            try {
+                const base64Logo = await getBase64(fileInput.files[0]);
+                db.settings.logoUrl = base64Logo;
+                localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+                renderLogo();
+                closeModal('edit-logo-modal');
+            } catch (e) {
+                alert("Gagal memproses gambar. Ukuran file mungkin terlalu besar.");
+            }
+        }
+
+        function openEditProfileModal() {
+            const data = db.members[activeMemberKey]; 
+            document.getElementById('edit-prof-avatar-file').value = ''; 
+            document.getElementById('edit-prof-quote').value = data.quote.replace(/"/g, '');
+            document.getElementById('edit-prof-ig').value = data.ig || '';
+            document.getElementById('edit-prof-tiktok').value = data.tiktok || '';
+            document.getElementById('edit-prof-pin').value = data.pin || '1234'; 
+            openModal('edit-profile-modal');
+        }
+
+        async function saveProfile() {
+            const quote = document.getElementById('edit-prof-quote').value;
+            const ig = document.getElementById('edit-prof-ig').value;
+            const tiktok = document.getElementById('edit-prof-tiktok').value;
+            const pin = document.getElementById('edit-prof-pin').value;
+            const fileInput = document.getElementById('edit-prof-avatar-file');
+
+            if (!pin.trim()) return alert('PIN tidak boleh kosong!');
+
+            try {
+                if (fileInput.files && fileInput.files[0]) {
+                    const base64Avatar = await getBase64(fileInput.files[0]);
+                    db.members[activeMemberKey].avatarUrl = base64Avatar;
+                }
+                
+                db.members[activeMemberKey].quote = `"${quote}"`;
+                db.members[activeMemberKey].ig = ig.replace('@', '');
+                db.members[activeMemberKey].tiktok = tiktok.replace('@', '');
+                db.members[activeMemberKey].pin = pin;
+
+                localStorage.setItem('cu_members', JSON.stringify(db.members));
+                closeModal('edit-profile-modal');
+                renderMembers();
+                loadMemberData(activeMemberKey); 
+            } catch (e) {
+                alert("Gagal menyimpan! Memori mungkin penuh atau gambar terlalu besar.");
+            }
+        }
+
+        function openAddAlbumModal() {
+            document.getElementById('add-album-title').value = '';
+            document.getElementById('add-album-desc').value = '';
+            document.getElementById('add-album-cover-file').value = '';
+            openModal('add-album-modal');
+        }
+
+        async function saveAlbum() {
+            const title = document.getElementById('add-album-title').value;
+            const cat = document.getElementById('add-album-cat').value;
+            const desc = document.getElementById('add-album-desc').value;
+            const fileInput = document.getElementById('add-album-cover-file');
+
+            if(!title || !fileInput.files[0]) return alert("Judul dan Foto Sampul wajib diisi!");
+            
+            // Validasi Ukuran Foto 100MB
+            if(fileInput.files[0].size > MAX_PHOTO_SIZE) {
+                return alert("Ukuran foto sampul maksimal adalah 100MB!");
+            }
+
+            try {
+                const base64Cover = await getBase64(fileInput.files[0]);
+                const newKey = title.toLowerCase().replace(/[^a-z0-9]/g, '') + Date.now().toString().slice(-4);
+
+                db.albums[newKey] = {
+                    category: cat, title: title, desc: desc, cover: base64Cover, photos: [base64Cover] 
+                };
+                localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+                closeModal('add-album-modal');
+                renderGallery();
+                initGalleryFilters();
+            } catch (e) {
+                alert("Gagal membuat album! Memori browser penuh.");
+            }
+        }
+
+        function openAddPhotoModal() { document.getElementById('add-photo-file').value = ''; openModal('add-photo-modal'); }
+
+        async function savePhoto() {
+            const fileInput = document.getElementById('add-photo-file');
+            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+            
+            // Validasi Ukuran Foto 100MB
+            if(fileInput.files[0].size > MAX_PHOTO_SIZE) {
+                return alert("Ukuran file foto maksimal adalah 100MB!");
+            }
+
+            try {
+                const base64Photo = await getBase64(fileInput.files[0]);
+                if(activeAlbumKey && db.albums[activeAlbumKey]) {
+                    db.albums[activeAlbumKey].photos.push(base64Photo);
+                    localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+                    closeModal('add-photo-modal');
+                    loadAlbumData(activeAlbumKey); 
+                }
+            } catch (e) { alert("Gagal menambahkan foto ke LocalStorage browser."); }
+        }
+
+        function openAddVideoModal() {
+            document.getElementById('add-video-title').value = '';
+            document.getElementById('add-video-desc').value = '';
+            document.getElementById('add-video-file').value = '';
+            openModal('add-video-modal');
+        }
+        
+        async function saveVideo() {
+            const title = document.getElementById('add-video-title').value;
+            const desc = document.getElementById('add-video-desc').value;
+            const fileInput = document.getElementById('add-video-file');
+            
+            if(!title || !fileInput.files[0]) return alert("Judul dan file video wajib diisi!");
+            
+            // Validasi Ukuran Video 5GB
+            if(fileInput.files[0].size > MAX_VIDEO_SIZE) {
+                return alert("Ukuran file video melebihi batas maksimal 5GB!");
+            }
+
+            try {
+                const base64Video = await getBase64(fileInput.files[0]);
+                db.videos.push({ title: title, desc: desc, src: base64Video });
+                localStorage.setItem('cu_videos', JSON.stringify(db.videos));
+                
+                closeModal('add-video-modal');
+                renderVideos();
+                alert("Video berhasil ditambahkan!");
+            } catch (e) { 
+                alert("Gagal menyimpan video! Batas memori LocalStorage peramban/browser kamu telah terpenuhi. (Untuk file raksasa butuh sistem Database sungguhan di Backend)"); 
+            }
+        }
+
+        function openAddPersonalPhotoModal() { document.getElementById('add-personal-photo-file').value = ''; openModal('add-personal-photo-modal'); }
+
+        async function savePersonalPhoto() {
+            const fileInput = document.getElementById('add-personal-photo-file');
+            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+
+            if(fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file foto maksimal 100MB!");
+
+            try {
+                const base64Photo = await getBase64(fileInput.files[0]);
+                if((currentUserKey === activeMemberKey || currentUserKey === 'admin') && db.members[activeMemberKey]) {
+                    db.members[activeMemberKey].photos.push(base64Photo);
+                    localStorage.setItem('cu_members', JSON.stringify(db.members));
+                    closeModal('add-personal-photo-modal');
+                    loadMemberData(activeMemberKey);
+                }
+            } catch (e) { alert("Gagal menambahkan foto pribadi."); }
+        }
+
+        function openAddMemberModal() {
+            document.getElementById('add-member-id').value = '';
+            document.getElementById('add-member-name').value = '';
+            document.getElementById('add-member-role').value = '';
+            document.getElementById('add-member-dob').value = '';
+            document.getElementById('add-member-quote').value = '';
+            openModal('add-member-modal');
+        }
+
+        function saveNewMember() {
+            const id = document.getElementById('add-member-id').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            const name = document.getElementById('add-member-name').value;
+            const role = document.getElementById('add-member-role').value;
+            const dob = document.getElementById('add-member-dob').value;
+            const quote = document.getElementById('add-member-quote').value;
+
+            if(!id || !name) return alert('ID Panggilan dan Nama Lengkap wajib diisi!');
+            if(db.members[id]) return alert('ID Anggota sudah terpakai, gunakan yang lain!');
+
+            db.members[id] = {
+                name: name, role: role || 'Anggota', dob: dob || '-', quote: quote ? `"${quote}"` : '"Halo semuanya!"',
+                ig: '', tiktok: '', pin: '1234', avatarUrl: '', photos: []
+            };
+
+            localStorage.setItem('cu_members', JSON.stringify(db.members));
+            closeModal('add-member-modal');
+            renderMembers();
+            alert('Anggota berhasil ditambahkan!');
+        }
+
+        function openEditRoleModal() { 
+            if (currentUserKey !== 'admin') return;
+            const data = db.members[activeMemberKey];
+            document.getElementById('edit-role-input').value = data.role;
+            openModal('edit-role-modal'); 
+        }
+
+        function saveRole() {
+            if (currentUserKey !== 'admin') return;
+            const newRole = document.getElementById('edit-role-input').value.trim();
+            if(!newRole) return alert("Julukan tidak boleh kosong!");
+            
+            db.members[activeMemberKey].role = newRole;
+            localStorage.setItem('cu_members', JSON.stringify(db.members));
+            closeModal('edit-role-modal');
+            renderMembers();
+            loadMemberData(activeMemberKey);
+        }
+
+        function openEditFilosofiModal() { document.getElementById('edit-filosofi-file').value = ''; openModal('edit-filosofi-modal'); }
+
+        async function saveFilosofiPhoto() {
+            const fileInput = document.getElementById('edit-filosofi-file');
+            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+
+            if(fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file maksimal 100MB!");
+
+            try {
+                const base64Photo = await getBase64(fileInput.files[0]);
+                db.settings.filosofiPhoto = base64Photo;
+                localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+                document.getElementById('filosofi-img').src = base64Photo;
+                closeModal('edit-filosofi-modal');
+            } catch (e) { alert("Gagal mengubah foto."); }
+        }
+
+        // --- DARK MODE LOGIC ---
+        function initTheme() {
+            const iconDesktop = document.getElementById('theme-icon-desktop');
+            const iconMobile = document.getElementById('theme-icon-mobile');
+            
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                if(iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
+                if(iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                document.documentElement.classList.remove('dark');
+                if(iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
+                if(iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const iconDesktop = document.getElementById('theme-icon-desktop');
+            const iconMobile = document.getElementById('theme-icon-mobile');
+            
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+                if(iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
+                if(iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.theme = 'light';
+                if(iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
+                if(iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // --- EVENTS ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if(btn && menu) {
+            btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => { menu.classList.add('hidden'); });
+            });
+        }
+
+        function initGalleryFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                
+                newBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-coffee', 'text-white');
+                        b.classList.add('bg-white', 'dark:bg-darkCard', 'text-coffee', 'dark:text-gray-300');
+                    });
+                    
+                    newBtn.classList.remove('bg-white', 'dark:bg-darkCard', 'text-coffee', 'dark:text-gray-300');
+                    newBtn.classList.add('active', 'bg-coffee', 'text-white');
+
+                    const filterValue = newBtn.getAttribute('data-filter');
+                    document.querySelectorAll('.gallery-item').forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            item.style.opacity = '0';
+                            item.style.transform = 'scale(0.8)';
+                            setTimeout(() => { item.style.display = 'none'; }, 300);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Init App
+        initTheme(); 
+        renderAll();
+        initGalleryFilters();
+        window.addEventListener('hashchange', handleRoute);
+        handleRoute();
+
+    </script>
 </body>
 </html>
