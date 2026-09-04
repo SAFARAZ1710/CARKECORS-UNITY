@@ -1,11 +1,33 @@
 const SPREADSHEET_ID = "1rd10ptl7sB8JOJ3t_6OplhXkSmd5jwY7-pJjM-g26bo";
 
+// Helper untuk menyimpan Base64 ke Google Drive dan mengembalikan direct URL
+function saveBase64ToDrive(base64Data, filename) {
+  if (!base64Data || !base64Data.startsWith("data:")) return base64Data;
+  try {
+    const parts = base64Data.split(",");
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+    const bytes = Utilities.base64Decode(parts[1]);
+    const blob = Utilities.newBlob(bytes, mimeType, filename || "upload_" + Date.now());
+    
+    // Simpan ke Google Drive root atau folder khusus
+    const file = DriveApp.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    // URL direct view
+    return "https://lh3.googleusercontent.com/d/" + file.getId();
+  } catch (err) {
+    Logger.log("Error saveDrive: " + err.toString());
+    return "";
+  }
+}
+
 function doGet(e) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   
   // 1. Data Anggota
   const sheetAnggota = ss.getSheetByName("Anggota");
-  const dataAnggota = sheetAnggota.getDataRange().getValues();
+  const dataAnggota = sheetAnggota ? sheetAnggota.getDataRange().getValues() : [];
   const members = {};
   for (let i = 1; i < dataAnggota.length; i++) {
     const row = dataAnggota[i];
@@ -29,7 +51,7 @@ function doGet(e) {
 
   // 2. Data Album
   const sheetAlbum = ss.getSheetByName("Album");
-  const dataAlbum = sheetAlbum.getDataRange().getValues();
+  const dataAlbum = sheetAlbum ? sheetAlbum.getDataRange().getValues() : [];
   const albums = {};
   for (let i = 1; i < dataAlbum.length; i++) {
     const row = dataAlbum[i];
@@ -96,12 +118,16 @@ function doPost(e) {
           if (payload.ig !== undefined) sheet.getRange(rowNum, 6).setValue(payload.ig);
           if (payload.tiktok !== undefined) sheet.getRange(rowNum, 7).setValue(payload.tiktok);
           if (payload.pin !== undefined) sheet.getRange(rowNum, 8).setValue(payload.pin);
-          if (payload.avatarUrl) sheet.getRange(rowNum, 9).setValue(payload.avatarUrl);
+          if (payload.avatarUrl) {
+            const avatarUrl = saveBase64ToDrive(payload.avatarUrl, "avatar_" + payload.key);
+            sheet.getRange(rowNum, 9).setValue(avatarUrl);
+          }
           break;
         }
       }
     } else if (action === "addMember") {
       const sheet = ss.getSheetByName("Anggota");
+      const avatarUrl = saveBase64ToDrive(payload.avatarUrl, "avatar_" + payload.id);
       sheet.appendRow([
         payload.id,
         payload.name,
@@ -111,18 +137,19 @@ function doPost(e) {
         payload.ig || "",
         payload.tiktok || "",
         payload.pin || "1234",
-        payload.avatarUrl || "",
+        avatarUrl || "",
         JSON.stringify(payload.photos || [])
       ]);
     } else if (action === "addAlbum") {
       const sheet = ss.getSheetByName("Album");
+      const coverUrl = saveBase64ToDrive(payload.cover, "cover_" + payload.id);
       sheet.appendRow([
         payload.id,
         payload.category,
         payload.title,
         payload.desc,
-        payload.cover,
-        JSON.stringify(payload.photos || [])
+        coverUrl,
+        JSON.stringify([coverUrl])
       ]);
     } else if (action === "addPhotoToAlbum") {
       const sheet = ss.getSheetByName("Album");
@@ -131,7 +158,8 @@ function doPost(e) {
         if (String(data[i][0]).trim() === payload.albumKey) {
           let photos = [];
           try { photos = JSON.parse(data[i][5] || "[]"); } catch (err) { photos = []; }
-          photos.push(payload.photoUrl);
+          const photoUrl = saveBase64ToDrive(payload.photoUrl, "album_photo_" + Date.now());
+          photos.push(photoUrl);
           sheet.getRange(i + 1, 6).setValue(JSON.stringify(photos));
           break;
         }
@@ -143,28 +171,35 @@ function doPost(e) {
         if (String(data[i][0]).trim() === payload.memberKey) {
           let photos = [];
           try { photos = JSON.parse(data[i][9] || "[]"); } catch (err) { photos = []; }
-          photos.push(payload.photoUrl);
+          const photoUrl = saveBase64ToDrive(payload.photoUrl, "member_photo_" + Date.now());
+          photos.push(photoUrl);
           sheet.getRange(i + 1, 10).setValue(JSON.stringify(photos));
           break;
         }
       }
     } else if (action === "addVideo") {
-      const sheet = ss.getSheetByName("Video");
-      if (sheet) {
-        sheet.appendRow([payload.title, payload.desc, payload.src]);
+      let sheet = ss.getSheetByName("Video");
+      if (!sheet) {
+        sheet = ss.insertSheet("Video");
+        sheet.appendRow(["title", "desc", "src"]);
       }
+      sheet.appendRow([payload.title, payload.desc, payload.src]);
     } else if (action === "updateSetting") {
       const sheet = ss.getSheetByName("Pengaturan");
       const data = sheet.getDataRange().getValues();
+      let value = payload.value;
+      if (payload.key === "filosofiPhoto" || payload.key === "logoUrl") {
+        value = saveBase64ToDrive(payload.value, payload.key);
+      }
       let found = false;
       for (let i = 1; i < data.length; i++) {
         if (String(data[i][0]).trim() === payload.key) {
-          sheet.getRange(i + 1, 2).setValue(payload.value);
+          sheet.getRange(i + 1, 2).setValue(value);
           found = true;
           break;
         }
       }
-      if (!found) sheet.appendRow([payload.key, payload.value]);
+      if (!found) sheet.appendRow([payload.key, value]);
     }
 
     return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
