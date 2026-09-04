@@ -13,12 +13,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
         tailwind.config = {
-            darkMode: 'class', // Mengaktifkan Dark Mode berbasis class
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -27,10 +27,9 @@
                         sand: '#D4C3B3',
                         terracotta: '#C8795A',
                         coffee: '#4A3F35',
-                        // Palet Khusus Dark Mode
-                        darkBg: '#1C1917',   // Latar belakang utama (Stone 900)
-                        darkCard: '#292524', // Latar belakang kartu/modal (Stone 800)
-                        darkInput: '#44403C' // Latar input (Stone 700)
+                        darkBg: '#1C1917',
+                        darkCard: '#292524',
+                        darkInput: '#44403C'
                     },
                     fontFamily: {
                         serif: ['Lora', 'serif'],
@@ -41,7 +40,6 @@
         }
     </script>
     <style>
-        /* Custom Styles for Polaroid & Animations */
         .polaroid {
             padding: 12px 12px 40px 12px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -55,34 +53,13 @@
         .polaroid:nth-child(even):hover {
             transform: scale(1.03) rotate(2deg);
         }
-        
-        /* Hide scrollbar for clean look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FDFBF7; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D4C3B3; 
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #C8795A; 
-        }
-
-        /* Dark Mode Scrollbar */
-        html.dark ::-webkit-scrollbar-track {
-            background: #1C1917; 
-        }
-        html.dark ::-webkit-scrollbar-thumb {
-            background: #4A3F35; 
-        }
-        html.dark ::-webkit-scrollbar-thumb:hover {
-            background: #C8795A; 
-        }
-        
-        /* Modal Overlay */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDFBF7; }
+        ::-webkit-scrollbar-thumb { background: #D4C3B3; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C8795A; }
+        html.dark ::-webkit-scrollbar-track { background: #1C1917; }
+        html.dark ::-webkit-scrollbar-thumb { background: #4A3F35; }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: #C8795A; }
         .modal-overlay {
             background-color: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(4px);
@@ -91,11 +68,17 @@
 </head>
 <body class="bg-cream dark:bg-darkBg text-coffee dark:text-gray-200 font-sans antialiased overflow-x-hidden transition-colors duration-300">
 
-    <!-- 1. Header & Navigation Bar -->
+    <!-- Notifikasi Status Sinkronisasi -->
+    <div id="sync-toast" class="fixed bottom-6 right-6 z-[100] hidden bg-coffee dark:bg-darkCard text-white text-sm px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 border border-terracotta">
+        <i id="sync-icon" class="fas fa-spinner fa-spin text-terracotta"></i>
+        <span id="sync-text">Menyinkronkan data...</span>
+    </div>
+
+    <!-- 1. Header & Navbar -->
     <header class="fixed w-full top-0 z-50 bg-cream/90 dark:bg-darkBg/90 backdrop-blur-md shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo (Sekarang bisa diklik untuk Login) -->
+                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a href="javascript:void(0)" onclick="handleLogoClick()" class="flex items-center gap-2 sm:gap-3 group cursor-pointer" title="Klik untuk Login Anggota">
                         <img id="main-logo-img" src="https://ui-avatars.com/api/?name=CU&background=C8795A&color=fff&rounded=true&bold=true" alt="Logo Carkecors" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-300 object-cover">
@@ -111,12 +94,12 @@
                     <a href="#galeri" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Galeri Kenangan</a>
                     <a href="#anggota" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold transition-colors">Anggota Kami</a>
                     
-                    <!-- Dark Mode Toggle Button Desktop -->
-                    <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta ml-2 transition-colors outline-none">
+                    <!-- Dark Mode Toggle Desktop -->
+                    <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta ml-2 transition-colors outline-none" title="Ubah Mode Tema">
                         <i id="theme-icon-desktop" class="fas fa-moon text-xl"></i>
                     </button>
 
-                    <!-- User Info (Hidden by default) -->
+                    <!-- User Menu -->
                     <div id="user-menu" class="hidden flex items-center gap-3 pl-4 border-l border-sand dark:border-gray-700">
                         <span id="logged-user-name" class="font-bold text-terracotta text-sm"></span>
                         <button onclick="logout()" class="text-xs bg-sand dark:bg-darkInput hover:bg-terracotta dark:hover:bg-terracotta text-coffee dark:text-white px-3 py-1 rounded-full transition-colors">Logout</button>
@@ -124,7 +107,6 @@
                 </nav>
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-4">
-                    <!-- Dark Mode Toggle Button Mobile -->
                     <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta outline-none">
                         <i id="theme-icon-mobile" class="fas fa-moon text-xl"></i>
                     </button>
@@ -134,7 +116,7 @@
                 </div>
             </div>
         </div>
-        <!-- Mobile Nav (Hidden by default) -->
+        <!-- Mobile Nav -->
         <div id="mobile-menu" class="hidden md:hidden bg-cream dark:bg-darkCard border-t border-sand dark:border-gray-800">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
                 <a href="#beranda" class="block px-3 py-2 text-coffee dark:text-gray-300 hover:bg-sage dark:hover:bg-darkInput hover:text-coffee font-medium rounded-md">Beranda</a>
@@ -152,7 +134,7 @@
     <!-- 2. Hero Section -->
     <section id="beranda" class="page-section relative h-screen min-h-[500px] flex items-center justify-center pt-20">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Group of friends laughing" class="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Friends laughing" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-coffee/60 dark:bg-black/70 mix-blend-multiply"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-cream dark:from-darkBg via-transparent to-transparent opacity-90"></div>
         </div>
@@ -171,7 +153,7 @@
         </div>
     </section>
 
-    <!-- 3. Seksi Filosofi -->
+    <!-- 3. Filosofi Section -->
     <section id="filosofi" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-cream dark:bg-darkBg relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center gap-10 sm:gap-16">
@@ -193,7 +175,6 @@
                     <div class="absolute inset-0 bg-sage dark:bg-darkCard rounded-2xl transform translate-x-2 translate-y-2 sm:translate-x-4 sm:translate-y-4"></div>
                     <img id="filosofi-img" src="https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Friendship Silhouette" class="relative z-10 rounded-2xl shadow-xl w-full h-auto object-cover aspect-[4/3]" />
                     
-                    <!-- Tombol Edit Filosofi (Muncul Jika Login) -->
                     <button id="btn-edit-filosofi" onclick="openEditFilosofiModal()" class="hidden absolute top-4 right-6 sm:right-4 bg-white dark:bg-darkCard border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white px-3 py-2 rounded-full font-bold shadow-md transition-colors z-20 items-center gap-2 text-xs sm:text-base">
                         <i class="fas fa-camera"></i> Ganti Foto
                     </button>
@@ -202,14 +183,13 @@
         </div>
     </section>
 
-    <!-- 4. Seksi Galeri Kenangan -->
+    <!-- 4. Galeri Section -->
     <section id="galeri" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative flex flex-col items-center">
-            
             <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-4 mt-2 md:mt-0">Jejak Langkah & Tawa</h2>
             <p class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto px-2">Kepingan memori visual dari setiap perjalanan, piring kosong, dan hal-hal konyol yang kita lakukan bersama.</p>
             
-            <!-- TABS PHOTO / VIDEO -->
+            <!-- Tabs -->
             <div class="flex justify-center mb-8 sm:mb-12 w-full">
                 <div class="bg-sand/30 dark:bg-darkCard rounded-full p-1 inline-flex shadow-inner">
                     <button id="tab-btn-photo" onclick="switchGalleryTab('photo')" class="px-6 py-2 rounded-full bg-terracotta text-white font-bold transition-all duration-300">Galeri Foto</button>
@@ -217,9 +197,8 @@
                 </div>
             </div>
 
-            <!-- BAGIAN FOTO -->
+            <!-- Bagian Foto -->
             <div id="section-photo" class="w-full relative">
-                <!-- Tombol Tambah Album (Muncul Jika Login) -->
                 <button id="btn-add-album" onclick="openAddAlbumModal()" class="hidden relative md:absolute right-auto md:right-0 -top-20 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max mx-auto md:mx-0">
                     <i class="fas fa-plus"></i> Tambah Album
                 </button>
@@ -234,61 +213,45 @@
                     <button class="filter-btn bg-white dark:bg-darkCard text-coffee dark:text-gray-300 hover:bg-sand dark:hover:bg-darkInput px-4 py-2 sm:px-6 text-sm sm:text-base rounded-full font-semibold shadow-sm transition-colors" data-filter="random">Random Moments</button>
                 </div>
 
-                <!-- Masonry/Polaroid Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full" id="gallery-container">
-                    <!-- Diisi oleh JS -->
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full" id="gallery-container"></div>
             </div>
 
-            <!-- BAGIAN VIDEO -->
+            <!-- Bagian Video -->
             <div id="section-video" class="w-full hidden relative">
-                <!-- Tombol Tambah Video -->
                 <button id="btn-add-video" onclick="openAddVideoModal()" class="hidden relative md:absolute right-auto md:right-0 -top-20 mb-6 md:mb-0 bg-coffee hover:bg-terracotta text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max mx-auto md:mx-0">
                     <i class="fas fa-video"></i> Tambah Video Baru
                 </button>
                 
-                <!-- Grid Video -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full text-left" id="video-container">
-                    <!-- Diisi oleh JS -->
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full text-left" id="video-container"></div>
             </div>
-
         </div>
     </section>
 
-    <!-- 4b. Seksi Detail Album -->
+    <!-- 4b. Detail Album Section -->
     <section id="album-detail" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative flex flex-col items-center md:block">
-            <!-- Tombol Kembali -->
             <div class="w-full text-left md:text-left md:mb-8 mb-4">
                 <a href="#galeri" class="inline-flex items-center text-terracotta hover:text-coffee dark:hover:text-cream font-semibold transition-colors text-sm sm:text-base">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali ke Galeri Utama
                 </a>
             </div>
             
-            <!-- Tombol Tambah Foto (Muncul Jika Login) -->
             <button id="btn-add-photo" onclick="openAddPhotoModal()" class="hidden relative md:absolute right-auto md:right-4 top-auto md:top-24 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 w-max">
                 <i class="fas fa-camera"></i> Tambah Foto
             </button>
 
-            <!-- Header Album -->
             <div class="text-center mb-8 sm:mb-12 w-full">
                 <h2 id="album-title" class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-3 sm:mb-4">Judul Album</h2>
                 <p id="album-desc" class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 max-w-2xl mx-auto px-2">Deskripsi album.</p>
             </div>
 
-            <!-- Grid Foto Dalam Album -->
-            <div id="album-photos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-                <!-- Foto-foto disisipkan oleh JavaScript -->
-            </div>
+            <div id="album-photos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full"></div>
         </div>
     </section>
 
-    <!-- 5. Seksi Anggota -->
+    <!-- 5. Anggota Section -->
     <section id="anggota" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-cream dark:bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative flex flex-col items-center">
-            
-            <!-- Tombol Tambah Anggota (Khusus Admin) -->
             <button id="btn-add-member" onclick="openAddMemberModal()" class="hidden relative md:absolute right-auto md:right-4 top-0 mb-6 md:mb-0 bg-terracotta hover:bg-coffee dark:hover:bg-darkInput text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-colors flex items-center gap-2 z-10 w-max">
                 <i class="fas fa-user-plus"></i> Tambah Anggota
             </button>
@@ -296,22 +259,18 @@
             <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee dark:text-cream mb-4 mt-2 md:mt-0">Kenali Wajah-wajah CARKECORS</h2>
             <p class="text-base sm:text-lg text-coffee/70 dark:text-gray-400 mb-10 sm:mb-16 max-w-2xl mx-auto px-2">Karakter berbeda, isi kepala berbeda, tapi entah kenapa bisa cocok.</p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 w-full" id="members-container">
-                <!-- Data anggota dirender otomatis oleh JavaScript -->
-            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 w-full" id="members-container"></div>
         </div>
     </section>
 
-    <!-- 5b. Seksi Detail Profil Anggota -->
+    <!-- 5b. Detail Anggota Section -->
     <section id="member-detail" class="page-section hidden py-16 md:py-24 pt-28 md:pt-32 min-h-screen bg-[#F5EFE6] dark:bg-[#151312]">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <a href="#anggota" class="inline-flex items-center text-terracotta hover:text-coffee dark:hover:text-cream font-semibold mb-6 sm:mb-8 transition-colors text-sm sm:text-base">
                 <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Anggota
             </a>
             
-            <div class="bg-white dark:bg-darkCard rounded-3xl p-6 sm:p-10 shadow-xl border-t-8 border-terracotta relative overflow-hidden flex flex-col items-center md:block" id="member-profile-card">
-                <!-- Konten disisipkan oleh JS -->
-            </div>
+            <div class="bg-white dark:bg-darkCard rounded-3xl p-6 sm:p-10 shadow-xl border-t-8 border-terracotta relative overflow-hidden flex flex-col items-center md:block" id="member-profile-card"></div>
         </div>
     </section>
 
@@ -321,7 +280,6 @@
             <h2 class="text-3xl font-serif font-bold mb-4">CARKECORS <span class="text-terracotta">UNITY</span></h2>
             <p class="text-cream/70 text-lg mb-8 italic">"Together since 2026."</p>
             
-            <!-- Akun Media Sosial CARKECORS -->
             <div class="flex justify-center gap-4 mb-8">
                 <a href="https://instagram.com/carkecorsunity" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
                     <i class="fab fa-instagram text-xl"></i> @carkecorsunity
@@ -367,7 +325,7 @@
         </div>
     </div>
 
-    <!-- 1b. Edit Logo Modal (Khusus Admin) -->
+    <!-- 1b. Edit Logo Modal -->
     <div id="edit-logo-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
         <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="flex justify-between items-center mb-6">
@@ -409,12 +367,10 @@
                 <div>
                     <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Username IG (tanpa @)</label>
                     <input type="text" id="edit-prof-ig" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm">
-                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin ditampilkan.</p>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Username TikTok (tanpa @)</label>
                     <input type="text" id="edit-prof-tiktok" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm">
-                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin ditampilkan.</p>
                 </div>
                 <div class="pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
                     <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1 text-terracotta">Ubah PIN Login</label>
@@ -453,7 +409,7 @@
                     <input type="text" id="add-album-desc" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Cerita singkat acara ini...">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Upload Foto Sampul (Maks 100MB)</label>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Foto Sampul (Pilih Gambar)</label>
                     <input type="file" id="add-album-cover-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
                 </div>
                 <button onclick="saveAlbum()" class="w-full bg-sage dark:bg-terracotta hover:bg-terracotta dark:hover:bg-coffee text-coffee dark:text-white font-bold py-3 rounded-lg transition-colors mt-4">
@@ -473,7 +429,7 @@
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto (Maks 100MB)</label>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto</label>
                     <input type="file" id="add-photo-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
                 </div>
                 <button onclick="savePhoto()" class="w-full bg-sand hover:bg-terracotta text-white font-bold py-3 rounded-lg transition-colors mt-4">
@@ -483,11 +439,11 @@
         </div>
     </div>
 
-    <!-- 4b. Add Video Modal (Baru) -->
+    <!-- 4b. Add Video Modal -->
     <div id="add-video-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
         <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Video (Maks 5GB)</h3>
+                <h3 class="text-2xl font-serif font-bold text-coffee dark:text-cream">Tambah Video Baru</h3>
                 <button onclick="closeModal('add-video-modal')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
             </div>
             <div class="space-y-4">
@@ -500,7 +456,7 @@
                     <input type="text" id="add-video-desc" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-3 focus:ring-terracotta outline-none text-sm" placeholder="Keterangan singkat">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Video (Maks 5GB)</label>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Video</label>
                     <input type="file" id="add-video-file" accept="video/mp4, video/webm, video/ogg, video/quicktime" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
                 </div>
                 <button onclick="saveVideo()" class="w-full bg-coffee hover:bg-terracotta text-white font-bold py-3 rounded-lg mt-4">Upload Video</button>
@@ -518,7 +474,7 @@
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto (Maks 100MB)</label>
+                    <label class="block text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Pilih File Foto</label>
                     <input type="file" id="add-personal-photo-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-gray-300 rounded-lg p-2 focus:ring-terracotta outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand dark:file:bg-gray-700 file:text-coffee dark:file:text-cream hover:file:bg-terracotta hover:file:text-white transition-all cursor-pointer">
                 </div>
                 <button onclick="savePersonalPhoto()" class="w-full bg-sand hover:bg-terracotta text-white font-bold py-3 rounded-lg transition-colors mt-4">
@@ -548,7 +504,7 @@
         </div>
     </div>
 
-    <!-- 7. Add Member Modal (Khusus Admin) -->
+    <!-- 7. Add Member Modal -->
     <div id="add-member-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
         <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -584,7 +540,7 @@
         </div>
     </div>
 
-    <!-- 8. Edit Role Modal (Khusus Admin) -->
+    <!-- 8. Edit Role Modal -->
     <div id="edit-role-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center modal-overlay px-4">
         <div class="bg-white dark:bg-darkCard p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="flex justify-between items-center mb-6">
@@ -604,15 +560,20 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- SCRIPT APPLICATION -->
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Konstanta Ukuran File
+        // ==========================================
+        // KONFIGURASI WEB APP GOOGLE APPS SCRIPT
+        // ==========================================
+        // Ganti URL berikut dengan Web App URL hasil Deploy Google Apps Script Anda:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
+
         const MAX_PHOTO_SIZE = 100 * 1024 * 1024; // 100 MB
         const MAX_VIDEO_SIZE = 5 * 1024 * 1024 * 1024; // 5 GB
 
-        // --- DATA & STATE MANAGEMENT ---
+        // Data Default (sebagai fallback sebelum terhubung ke spreadsheet)
         const defaultMembers = {
             'sabiq': { name: 'Sabiq Faruq Al-Fawwaz', role: 'Si Paling Santai', dob: '12 Januari 2002', quote: '"Jalani aja dulu, nanti juga sampai."', ig: 'el_f4rw4zsa', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80'] },
             'reval': { name: 'Reval Fathurrahman Yakub', role: 'Tukang Makan', dob: '05 Maret 2002', quote: '"Ada yang mau ngabisin nggak? Sini buat gue."', ig: 'revalfathur', avatarUrl: '', photos: ['https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80'] },
@@ -643,7 +604,6 @@
             { title: "Kompilasi Ketawa", desc: "Ketawa bareng gak jelas", src: "https://www.w3schools.com/html/mov_bbb.mp4" }
         ];
 
-        // Initialize Database & Current User
         let db = {
             members: JSON.parse(localStorage.getItem('cu_members')) || defaultMembers,
             albums: JSON.parse(localStorage.getItem('cu_albums')) || defaultAlbums,
@@ -653,6 +613,7 @@
                 logoUrl: '' 
             }
         };
+
         let currentUserKey = localStorage.getItem('cu_currentUser') || null;
         let activeAlbumKey = null; 
         let activeMemberKey = null; 
@@ -660,7 +621,6 @@
         window.history.replaceState(null, null, ' '); 
         window.location.hash = 'beranda';
 
-        // Tema badge solid untuk peran (Role)
         const themeStyles = [
             { border: 'border-terracotta', badgeBg: 'bg-terracotta', badgeText: 'text-white' },
             { border: 'border-sage', badgeBg: 'bg-sage', badgeText: 'text-coffee' },
@@ -668,6 +628,68 @@
             { border: 'border-coffee', badgeBg: 'bg-coffee', badgeText: 'text-cream' }
         ];
 
+        // --- SISTEM NOTIFIKASI TOAST ---
+        function showToast(text, isSpin = false) {
+            const toast = document.getElementById('sync-toast');
+            const icon = document.getElementById('sync-icon');
+            const label = document.getElementById('sync-text');
+            if (!toast) return;
+            label.textContent = text;
+            icon.className = isSpin ? "fas fa-spinner fa-spin text-terracotta" : "fas fa-check-circle text-green-400";
+            toast.classList.remove('hidden');
+            if (!isSpin) {
+                setTimeout(() => toast.classList.add('hidden'), 2500);
+            }
+        }
+
+        // --- DATABASE SINKRONISASI (GOOGLE SHEETS) ---
+        async function syncToDatabase(action, payload = {}) {
+            if (!SCRIPT_URL || SCRIPT_URL.includes("ISI_DENGAN_URL")) return;
+            showToast("Menyimpan ke Google Sheets...", true);
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: action, ...payload })
+                });
+                showToast("Data tersimpan di spreadsheet!");
+            } catch (err) {
+                console.warn("Gagal sinkron ke database:", err);
+                showToast("Tersimpan di cache browser");
+            }
+        }
+
+        async function fetchDatabase() {
+            if (!SCRIPT_URL || SCRIPT_URL.includes("ISI_DENGAN_URL")) {
+                renderAll();
+                return;
+            }
+            showToast("Memuat dari Google Sheets...", true);
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const data = await res.json();
+                if (data.members && Object.keys(data.members).length > 0) db.members = data.members;
+                if (data.albums && Object.keys(data.albums).length > 0) db.albums = data.albums;
+                if (data.videos && data.videos.length > 0) db.videos = data.videos;
+                if (data.settings) db.settings = { ...db.settings, ...data.settings };
+                
+                // Simpan cache lokal
+                localStorage.setItem('cu_members', JSON.stringify(db.members));
+                localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+                localStorage.setItem('cu_videos', JSON.stringify(db.videos));
+                localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+
+                showToast("Data terbaru berhasil dimuat!");
+                renderAll();
+            } catch (err) {
+                console.warn("Gagal memuat dari API, memakai data lokal:", err);
+                showToast("Mode offline (data lokal)");
+                renderAll();
+            }
+        }
+
+        // --- RENDER ALL ---
         function renderAll() {
             updateNavbarState();
             renderLogo();
@@ -675,18 +697,15 @@
             renderGallery();
             renderVideos();
             
-            // Render Filosofi Photo
             const filosofiImg = document.getElementById('filosofi-img');
             if (filosofiImg && db.settings && db.settings.filosofiPhoto) {
                 filosofiImg.src = db.settings.filosofiPhoto;
             }
         }
 
-        // --- RENDER FUNCTIONS ---
-        
         function renderLogo() {
             const logoImg = document.getElementById('main-logo-img');
-            if(logoImg) {
+            if (logoImg) {
                 if (db.settings.logoUrl && db.settings.logoUrl.trim() !== '') {
                     logoImg.src = db.settings.logoUrl;
                 } else {
@@ -725,9 +744,7 @@
                             <img src="${mainPhotoUrl}" alt="${data.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>
                         <h3 class="text-xl font-serif font-bold text-coffee dark:text-cream truncate mb-2" title="${data.name}">${shortName}</h3>
-                        
                         <span class="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold ${theme.badgeBg} ${theme.badgeText} uppercase tracking-widest mb-3 shadow-sm">${data.role}</span>
-                        
                         <p class="text-coffee/70 dark:text-gray-400 text-sm italic line-clamp-2 mt-1">"${data.quote.replace(/"/g, '')}"</p>
                         <div class="mt-3 flex flex-wrap justify-center gap-2">
                             ${socialBadgesHTML}
@@ -739,7 +756,6 @@
             }
         }
 
-        // --- SISTEM TAB GALERI ---
         function switchGalleryTab(tabType) {
             const btnPhoto = document.getElementById('tab-btn-photo');
             const btnVideo = document.getElementById('tab-btn-video');
@@ -779,7 +795,8 @@
                 container.innerHTML += html;
             }
             
-            document.getElementById('btn-add-album').classList.toggle('hidden', !currentUserKey);
+            const btnAddAlbum = document.getElementById('btn-add-album');
+            if (btnAddAlbum) btnAddAlbum.classList.toggle('hidden', !currentUserKey);
         }
 
         function renderVideos() {
@@ -792,7 +809,7 @@
                     <div class="bg-white dark:bg-darkCard rounded-xl overflow-hidden shadow-lg p-4 border border-sand dark:border-gray-700">
                         <video controls class="w-full h-48 md:h-56 object-cover rounded-lg mb-4 bg-black">
                             <source src="${vid.src}" type="video/mp4">
-                            Browser kamu tidak support tag video.
+                            Browser tidak mendukung tag video.
                         </video>
                         <h4 class="font-bold font-serif text-coffee dark:text-cream text-xl">${vid.title}</h4>
                         <p class="text-sm text-gray-500 mt-1">${vid.desc}</p>
@@ -800,12 +817,13 @@
                 `;
             });
 
-            document.getElementById('btn-add-video').classList.toggle('hidden', !currentUserKey);
+            const btnAddVideo = document.getElementById('btn-add-video');
+            if (btnAddVideo) btnAddVideo.classList.toggle('hidden', !currentUserKey);
         }
 
         function loadMemberData(memberKey) {
             const data = db.members[memberKey];
-            if(!data) { window.location.hash = 'anggota'; return; }
+            if (!data) { window.location.hash = 'anggota'; return; }
             activeMemberKey = memberKey;
 
             const profileCard = document.getElementById('member-profile-card');
@@ -894,7 +912,7 @@
 
         function loadAlbumData(albumKey) {
             const data = db.albums[albumKey];
-            if(!data) { window.location.hash = 'galeri'; return; }
+            if (!data) { window.location.hash = 'galeri'; return; }
             activeAlbumKey = albumKey;
 
             document.getElementById('album-title').textContent = data.title;
@@ -912,7 +930,8 @@
                 photoContainer.innerHTML += imgHTML;
             });
 
-            document.getElementById('btn-add-photo').classList.toggle('hidden', !currentUserKey);
+            const btnAddPhoto = document.getElementById('btn-add-photo');
+            if (btnAddPhoto) btnAddPhoto.classList.toggle('hidden', !currentUserKey);
         }
 
         // --- ROUTING ---
@@ -956,7 +975,7 @@
             showPage(hash);
         }
 
-        // --- LOGIN & AUTH LOGIC ---
+        // --- AUTH LOGIC ---
         function handleLogoClick() {
             if (currentUserKey === 'admin') {
                 openEditLogoModal();
@@ -979,11 +998,11 @@
                 userMenu.classList.remove('hidden');
                 mobileUserMenu.classList.remove('hidden');
                 
-                if(btnEditFilosofi) {
+                if (btnEditFilosofi) {
                     btnEditFilosofi.classList.remove('hidden');
                     btnEditFilosofi.classList.add('flex');
                 }
-                if(btnAddMember) btnAddMember.classList.remove('hidden');
+                if (btnAddMember) btnAddMember.classList.remove('hidden');
                 
             } else if (currentUserKey && db.members[currentUserKey]) {
                 const name = db.members[currentUserKey].name.split(' ')[0];
@@ -992,20 +1011,20 @@
                 userMenu.classList.remove('hidden');
                 mobileUserMenu.classList.remove('hidden');
                 
-                if(btnEditFilosofi) {
+                if (btnEditFilosofi) {
                     btnEditFilosofi.classList.remove('hidden');
                     btnEditFilosofi.classList.add('flex');
                 }
-                if(btnAddMember) btnAddMember.classList.add('hidden');
+                if (btnAddMember) btnAddMember.classList.add('hidden');
             } else {
                 userMenu.classList.add('hidden');
                 mobileUserMenu.classList.add('hidden');
                 
-                if(btnEditFilosofi) {
+                if (btnEditFilosofi) {
                     btnEditFilosofi.classList.add('hidden');
                     btnEditFilosofi.classList.remove('flex');
                 }
-                if(btnAddMember) btnAddMember.classList.add('hidden');
+                if (btnAddMember) btnAddMember.classList.add('hidden');
             }
         }
 
@@ -1051,7 +1070,7 @@
             window.location.hash = 'beranda';
         }
 
-        // --- MODAL & DATA LOGIC ---
+        // --- MODAL UTILS ---
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
@@ -1070,6 +1089,7 @@
             });
         }
 
+        // --- SIMPAN PENGATURAN & DATA ---
         function openEditLogoModal() {
             document.getElementById('edit-logo-file').value = '';
             openModal('edit-logo-modal');
@@ -1077,7 +1097,7 @@
 
         async function saveLogo() {
             const fileInput = document.getElementById('edit-logo-file');
-            if(!fileInput.files[0]) return alert("Pilih gambar logo terlebih dahulu!");
+            if (!fileInput.files[0]) return alert("Pilih gambar logo terlebih dahulu!");
 
             try {
                 const base64Logo = await getBase64(fileInput.files[0]);
@@ -1085,8 +1105,9 @@
                 localStorage.setItem('cu_settings', JSON.stringify(db.settings));
                 renderLogo();
                 closeModal('edit-logo-modal');
+                syncToDatabase("updateSetting", { key: "logoUrl", value: base64Logo });
             } catch (e) {
-                alert("Gagal memproses gambar. Ukuran file mungkin terlalu besar.");
+                alert("Gagal memproses logo.");
             }
         }
 
@@ -1110,8 +1131,9 @@
             if (!pin.trim()) return alert('PIN tidak boleh kosong!');
 
             try {
+                let base64Avatar = db.members[activeMemberKey].avatarUrl;
                 if (fileInput.files && fileInput.files[0]) {
-                    const base64Avatar = await getBase64(fileInput.files[0]);
+                    base64Avatar = await getBase64(fileInput.files[0]);
                     db.members[activeMemberKey].avatarUrl = base64Avatar;
                 }
                 
@@ -1123,9 +1145,18 @@
                 localStorage.setItem('cu_members', JSON.stringify(db.members));
                 closeModal('edit-profile-modal');
                 renderMembers();
-                loadMemberData(activeMemberKey); 
+                loadMemberData(activeMemberKey);
+
+                syncToDatabase("updateProfile", {
+                    key: activeMemberKey,
+                    quote: `"${quote}"`,
+                    ig: ig.replace('@', ''),
+                    tiktok: tiktok.replace('@', ''),
+                    pin: pin,
+                    avatarUrl: base64Avatar
+                });
             } catch (e) {
-                alert("Gagal menyimpan! Memori mungkin penuh atau gambar terlalu besar.");
+                alert("Gagal menyimpan profil.");
             }
         }
 
@@ -1142,12 +1173,8 @@
             const desc = document.getElementById('add-album-desc').value;
             const fileInput = document.getElementById('add-album-cover-file');
 
-            if(!title || !fileInput.files[0]) return alert("Judul dan Foto Sampul wajib diisi!");
-            
-            // Validasi Ukuran Foto 100MB
-            if(fileInput.files[0].size > MAX_PHOTO_SIZE) {
-                return alert("Ukuran foto sampul maksimal adalah 100MB!");
-            }
+            if (!title || !fileInput.files[0]) return alert("Judul dan Foto Sampul wajib diisi!");
+            if (fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran foto sampul maksimal 100MB!");
 
             try {
                 const base64Cover = await getBase64(fileInput.files[0]);
@@ -1160,8 +1187,17 @@
                 closeModal('add-album-modal');
                 renderGallery();
                 initGalleryFilters();
+
+                syncToDatabase("addAlbum", {
+                    id: newKey,
+                    category: cat,
+                    title: title,
+                    desc: desc,
+                    cover: base64Cover,
+                    photos: [base64Cover]
+                });
             } catch (e) {
-                alert("Gagal membuat album! Memori browser penuh.");
+                alert("Gagal membuat album.");
             }
         }
 
@@ -1169,22 +1205,23 @@
 
         async function savePhoto() {
             const fileInput = document.getElementById('add-photo-file');
-            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
-            
-            // Validasi Ukuran Foto 100MB
-            if(fileInput.files[0].size > MAX_PHOTO_SIZE) {
-                return alert("Ukuran file foto maksimal adalah 100MB!");
-            }
+            if (!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+            if (fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file foto maksimal 100MB!");
 
             try {
                 const base64Photo = await getBase64(fileInput.files[0]);
-                if(activeAlbumKey && db.albums[activeAlbumKey]) {
+                if (activeAlbumKey && db.albums[activeAlbumKey]) {
                     db.albums[activeAlbumKey].photos.push(base64Photo);
                     localStorage.setItem('cu_albums', JSON.stringify(db.albums));
                     closeModal('add-photo-modal');
                     loadAlbumData(activeAlbumKey); 
+
+                    syncToDatabase("addPhotoToAlbum", {
+                        albumKey: activeAlbumKey,
+                        photoUrl: base64Photo
+                    });
                 }
-            } catch (e) { alert("Gagal menambahkan foto ke LocalStorage browser."); }
+            } catch (e) { alert("Gagal menambahkan foto."); }
         }
 
         function openAddVideoModal() {
@@ -1199,12 +1236,8 @@
             const desc = document.getElementById('add-video-desc').value;
             const fileInput = document.getElementById('add-video-file');
             
-            if(!title || !fileInput.files[0]) return alert("Judul dan file video wajib diisi!");
-            
-            // Validasi Ukuran Video 5GB
-            if(fileInput.files[0].size > MAX_VIDEO_SIZE) {
-                return alert("Ukuran file video melebihi batas maksimal 5GB!");
-            }
+            if (!title || !fileInput.files[0]) return alert("Judul dan file video wajib diisi!");
+            if (fileInput.files[0].size > MAX_VIDEO_SIZE) return alert("Ukuran video maksimal 5GB!");
 
             try {
                 const base64Video = await getBase64(fileInput.files[0]);
@@ -1213,9 +1246,14 @@
                 
                 closeModal('add-video-modal');
                 renderVideos();
-                alert("Video berhasil ditambahkan!");
+
+                syncToDatabase("addVideo", {
+                    title: title,
+                    desc: desc,
+                    src: base64Video
+                });
             } catch (e) { 
-                alert("Gagal menyimpan video! Batas memori LocalStorage peramban/browser kamu telah terpenuhi. (Untuk file raksasa butuh sistem Database sungguhan di Backend)"); 
+                alert("Gagal menyimpan video. Kapasitas memori browser penuh."); 
             }
         }
 
@@ -1223,17 +1261,21 @@
 
         async function savePersonalPhoto() {
             const fileInput = document.getElementById('add-personal-photo-file');
-            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
-
-            if(fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file foto maksimal 100MB!");
+            if (!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+            if (fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file foto maksimal 100MB!");
 
             try {
                 const base64Photo = await getBase64(fileInput.files[0]);
-                if((currentUserKey === activeMemberKey || currentUserKey === 'admin') && db.members[activeMemberKey]) {
+                if ((currentUserKey === activeMemberKey || currentUserKey === 'admin') && db.members[activeMemberKey]) {
                     db.members[activeMemberKey].photos.push(base64Photo);
                     localStorage.setItem('cu_members', JSON.stringify(db.members));
                     closeModal('add-personal-photo-modal');
                     loadMemberData(activeMemberKey);
+
+                    syncToDatabase("addPersonalPhoto", {
+                        memberKey: activeMemberKey,
+                        photoUrl: base64Photo
+                    });
                 }
             } catch (e) { alert("Gagal menambahkan foto pribadi."); }
         }
@@ -1254,18 +1296,23 @@
             const dob = document.getElementById('add-member-dob').value;
             const quote = document.getElementById('add-member-quote').value;
 
-            if(!id || !name) return alert('ID Panggilan dan Nama Lengkap wajib diisi!');
-            if(db.members[id]) return alert('ID Anggota sudah terpakai, gunakan yang lain!');
+            if (!id || !name) return alert('ID Panggilan dan Nama Lengkap wajib diisi!');
+            if (db.members[id]) return alert('ID Anggota sudah terpakai!');
 
-            db.members[id] = {
+            const newMember = {
                 name: name, role: role || 'Anggota', dob: dob || '-', quote: quote ? `"${quote}"` : '"Halo semuanya!"',
                 ig: '', tiktok: '', pin: '1234', avatarUrl: '', photos: []
             };
 
+            db.members[id] = newMember;
             localStorage.setItem('cu_members', JSON.stringify(db.members));
             closeModal('add-member-modal');
             renderMembers();
-            alert('Anggota berhasil ditambahkan!');
+
+            syncToDatabase("addMember", {
+                id: id,
+                ...newMember
+            });
         }
 
         function openEditRoleModal() { 
@@ -1278,22 +1325,26 @@
         function saveRole() {
             if (currentUserKey !== 'admin') return;
             const newRole = document.getElementById('edit-role-input').value.trim();
-            if(!newRole) return alert("Julukan tidak boleh kosong!");
+            if (!newRole) return alert("Julukan tidak boleh kosong!");
             
             db.members[activeMemberKey].role = newRole;
             localStorage.setItem('cu_members', JSON.stringify(db.members));
             closeModal('edit-role-modal');
             renderMembers();
             loadMemberData(activeMemberKey);
+
+            syncToDatabase("updateProfile", {
+                key: activeMemberKey,
+                role: newRole
+            });
         }
 
         function openEditFilosofiModal() { document.getElementById('edit-filosofi-file').value = ''; openModal('edit-filosofi-modal'); }
 
         async function saveFilosofiPhoto() {
             const fileInput = document.getElementById('edit-filosofi-file');
-            if(!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
-
-            if(fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file maksimal 100MB!");
+            if (!fileInput.files[0]) return alert("Pilih foto terlebih dahulu!");
+            if (fileInput.files[0].size > MAX_PHOTO_SIZE) return alert("Ukuran file maksimal 100MB!");
 
             try {
                 const base64Photo = await getBase64(fileInput.files[0]);
@@ -1301,7 +1352,12 @@
                 localStorage.setItem('cu_settings', JSON.stringify(db.settings));
                 document.getElementById('filosofi-img').src = base64Photo;
                 closeModal('edit-filosofi-modal');
-            } catch (e) { alert("Gagal mengubah foto."); }
+
+                syncToDatabase("updateSetting", {
+                    key: "filosofiPhoto",
+                    value: base64Photo
+                });
+            } catch (e) { alert("Gagal mengubah foto filosofi."); }
         }
 
         // --- DARK MODE LOGIC ---
@@ -1311,12 +1367,12 @@
             
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
-                if(iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
-                if(iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
+                if (iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
+                if (iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
             } else {
                 document.documentElement.classList.remove('dark');
-                if(iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
-                if(iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
+                if (iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
+                if (iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
             }
         }
 
@@ -1327,22 +1383,22 @@
             
             if (document.documentElement.classList.contains('dark')) {
                 localStorage.theme = 'dark';
-                if(iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
-                if(iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
+                if (iconDesktop) iconDesktop.classList.replace('fa-moon', 'fa-sun');
+                if (iconMobile) iconMobile.classList.replace('fa-moon', 'fa-sun');
             } else {
                 localStorage.theme = 'light';
-                if(iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
-                if(iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
+                if (iconDesktop) iconDesktop.classList.replace('fa-sun', 'fa-moon');
+                if (iconMobile) iconMobile.classList.replace('fa-sun', 'fa-moon');
             }
         }
 
-        // --- EVENTS ---
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        if(btn && menu) {
-            btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+        // --- MOBILE MENU ---
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuEl = document.getElementById('mobile-menu');
+        if (btnMenu && menuEl) {
+            btnMenu.addEventListener('click', () => { menuEl.classList.toggle('hidden'); });
             document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => { menu.classList.add('hidden'); });
+                link.addEventListener('click', () => { menuEl.classList.add('hidden'); });
             });
         }
 
@@ -1379,13 +1435,12 @@
             });
         }
 
-        // Init App
+        // --- INISIALISASI APLIKASI ---
         initTheme(); 
-        renderAll();
         initGalleryFilters();
+        fetchDatabase(); // Memuat data langsung dari spreadsheet
         window.addEventListener('hashchange', handleRoute);
         handleRoute();
-
     </script>
 </body>
 </html>
