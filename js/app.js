@@ -349,23 +349,35 @@ function renderMembers() {
 }
 
 function loadMemberData(memberKey) {
-    const data = db.members[memberKey];
-    if (!data) { window.location.hash = 'anggota'; return; }
+    const data = db.members ? db.members[memberKey] : null;
+    if (!data) { 
+        window.location.hash = 'anggota'; 
+        return; 
+    }
     activeMemberKey = memberKey;
 
+    // AMANKAN ARRAY FOTO (Mencegah error jika Firebase menghapus array kosong)
+    const photosList = Array.isArray(data.photos) ? data.photos : (data.photos ? Object.values(data.photos) : []);
+    data.photos = photosList;
+
     const profileCard = document.getElementById('member-profile-card');
-    const initials = getInitials(data.name);
+    if (!profileCard) return;
+
+    const name = data.name || memberKey;
+    const initials = getInitials(name);
     const hasPhoto = Boolean(data.avatarUrl && data.avatarUrl.trim() !== '');
-    
+    const quoteText = data.quote ? data.quote.replace(/"/g, '') : 'Halo semuanya!';
+    const roleText = data.role || 'Anggota';
+
     let avatarContentHTML = '';
     if (hasPhoto) {
-        avatarContentHTML = `<img src="${formatDriveImageUrl(data.avatarUrl)}" alt="${data.name}" class="w-full h-full object-cover rounded-full border-4 sm:border-6 md:border-8 border-cream dark:border-gray-700 shadow-xl z-10 relative">`;
+        avatarContentHTML = `<img src="${formatDriveImageUrl(data.avatarUrl)}" alt="${name}" class="w-full h-full object-cover rounded-full border-4 sm:border-6 md:border-8 border-cream dark:border-gray-700 shadow-xl z-10 relative">`;
     } else {
         avatarContentHTML = `<div class="w-full h-full rounded-full border-4 sm:border-6 md:border-8 border-cream dark:border-gray-700 shadow-xl z-10 relative bg-sand/30 dark:bg-darkInput text-terracotta font-serif font-bold text-3xl sm:text-4xl md:text-5xl flex items-center justify-center">${initials}</div>`;
     }
 
     let photosHTML = '';
-    if (data.photos.length === 0) {
+    if (photosList.length === 0) {
         photosHTML = `
             <div class="col-span-full py-8 sm:py-12 text-center bg-cream/30 dark:bg-black/20 rounded-xl sm:rounded-2xl border border-dashed border-sand dark:border-gray-700">
                 <i class="fas fa-camera-retro text-2xl sm:text-3xl mb-2 text-terracotta/60"></i>
@@ -374,7 +386,7 @@ function loadMemberData(memberKey) {
             </div>
         `;
     } else {
-        data.photos.forEach((photo, pIndex) => {
+        photosList.forEach((photo, pIndex) => {
             const imgUrl = formatDriveImageUrl(photo);
             let deleteBtnHTML = '';
             if (currentUserKey === 'admin' || currentUserKey === memberKey) {
@@ -388,7 +400,7 @@ function loadMemberData(memberKey) {
             photosHTML += `
                 <div class="relative overflow-hidden rounded-xl shadow-sm sm:shadow-md hover:shadow-lg transition-all duration-300 group">
                     ${deleteBtnHTML}
-                    <img src="${imgUrl}" alt="Momen ${data.name}" class="w-full h-36 sm:h-48 md:h-60 object-cover hover:scale-105 transition-transform duration-500">
+                    <img src="${imgUrl}" alt="Momen ${name}" class="w-full h-36 sm:h-48 md:h-60 object-cover hover:scale-105 transition-transform duration-500">
                 </div>
             `;
         });
@@ -399,7 +411,7 @@ function loadMemberData(memberKey) {
         let removeAvatarBtn = '';
         if (hasPhoto) {
             removeAvatarBtn = `
-                <button onclick="removeProfileAvatar()" class="bg-gray-100 dark:bg-darkInput text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full font-bold shadow-sm transition-colors flex items-center gap-1.5 text-xs sm:text-sm" title="Hapus foto profil dan gunakan lencana inisial">
+                <button onclick="removeProfileAvatar()" class="bg-gray-100 dark:bg-darkInput text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full font-bold shadow-sm transition-colors flex items-center gap-1.5 text-xs sm:text-sm" title="Hapus foto profil">
                     <i class="fas fa-user-slash"></i> Hapus Foto Profil
                 </button>
             `;
@@ -446,17 +458,17 @@ function loadMemberData(memberKey) {
                 ${avatarContentHTML}
             </div>
             <div class="flex-grow text-center md:text-left w-full">
-                <h2 class="text-xl sm:text-3xl md:text-4xl font-serif font-bold text-coffee dark:text-cream mb-1.5 sm:mb-2 leading-tight">${data.name}</h2>
+                <h2 class="text-xl sm:text-3xl md:text-4xl font-serif font-bold text-coffee dark:text-cream mb-1.5 sm:mb-2 leading-tight">${name}</h2>
                 
                 <div class="flex items-center justify-center md:justify-start mb-3 sm:mb-5">
-                    <span class="inline-block px-3.5 sm:px-4 py-1 bg-coffee dark:bg-sand text-white dark:text-coffee font-bold rounded-full text-[10px] sm:text-xs tracking-widest uppercase shadow-sm">${data.role}</span>
+                    <span class="inline-block px-3.5 sm:px-4 py-1 bg-coffee dark:bg-sand text-white dark:text-coffee font-bold rounded-full text-[10px] sm:text-xs tracking-widest uppercase shadow-sm">${roleText}</span>
                     ${editRoleBtnHTML}
                 </div>
                 
                 <div class="space-y-3 sm:space-y-4">
                     <div class="flex items-start justify-center md:justify-start text-coffee dark:text-gray-200 text-xs sm:text-sm md:text-base bg-cream/50 dark:bg-black/30 p-2.5 sm:p-3.5 rounded-xl border-l-4 border-terracotta">
                         <i class="fas fa-quote-left text-terracotta text-sm sm:text-base w-5 text-center mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span class="italic font-serif leading-relaxed">"${data.quote.replace(/"/g, '')}"</span>
+                        <span class="italic font-serif leading-relaxed">"${quoteText}"</span>
                     </div>
                     <div class="pt-1 flex flex-wrap justify-center md:justify-start gap-2">
                         ${data.ig && data.ig.trim() !== '' ? `
@@ -476,7 +488,7 @@ function loadMemberData(memberKey) {
         <div class="w-full">
             <div class="flex items-center justify-between gap-2 mb-4 sm:mb-6">
                 <h3 class="text-base sm:text-xl font-serif font-bold text-coffee dark:text-cream flex items-center">
-                    <i class="fas fa-camera-retro text-terracotta mr-2"></i> Momen ${data.name.split(' ')[0]}
+                    <i class="fas fa-camera-retro text-terracotta mr-2"></i> Momen ${name.split(' ')[0]}
                 </h3>
                 ${addPersonalPhotoButtonHTML}
             </div>
@@ -896,21 +908,30 @@ function showPage(pageId) {
     let navToHighlight = pageId;
     
     if (pageId.startsWith('album-')) {
-        sectionToShow = 'album-detail'; navToHighlight = 'galeri'; 
-        loadAlbumData(pageId.replace('album-', '')); 
+        sectionToShow = 'album-detail'; 
+        navToHighlight = 'galeri'; 
     } else if (pageId.startsWith('member-')) {
-        sectionToShow = 'member-detail'; navToHighlight = 'anggota'; 
-        loadMemberData(pageId.replace('member-', '')); 
+        sectionToShow = 'member-detail'; 
+        navToHighlight = 'anggota'; 
     } else if (!pages.includes(pageId)) {
-        sectionToShow = 'beranda'; navToHighlight = 'beranda';
+        sectionToShow = 'beranda'; 
+        navToHighlight = 'beranda';
     }
 
+    // Tampilkan bagian halamannya terlebih dahulu
     document.querySelectorAll('.page-section').forEach(sec => {
         sec.classList.add('hidden');
     });
 
     const activePage = document.getElementById(sectionToShow);
     if (activePage) activePage.classList.remove('hidden');
+
+    // Muat data profil atau album
+    if (pageId.startsWith('album-')) {
+        loadAlbumData(pageId.replace('album-', '')); 
+    } else if (pageId.startsWith('member-')) {
+        loadMemberData(pageId.replace('member-', '')); 
+    }
 
     document.querySelectorAll('nav .nav-link, #mobile-menu a').forEach(link => {
         if (link.getAttribute('href') === '#' + navToHighlight) {
@@ -988,7 +1009,7 @@ document.getElementById('login-username')?.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') document.getElementById('login-pin')?.focus();
 });
 
-// Listener Realtime Firebase: Otomatis sinkron di semua HP/browser yang sedang membuka website
+// Listener Realtime Firebase
 dbRef.on('value', (snapshot) => {
     const cloudData = snapshot.val();
     if (cloudData) {
@@ -996,8 +1017,14 @@ dbRef.on('value', (snapshot) => {
         db.albums = cloudData.albums || {};
         db.videos = cloudData.videos || [];
         db.settings = cloudData.settings || { filosofiPhotos: [], logoUrl: '' };
+
+        // Pastikan setiap anggota selalu punya properti photos
+        for (const key in db.members) {
+            if (!Array.isArray(db.members[key].photos)) {
+                db.members[key].photos = db.members[key].photos ? Object.values(db.members[key].photos) : [];
+            }
+        }
     } else {
-        // Jika cloud masih kosong, unggah data awal ke cloud
         syncToCloud();
     }
     renderAll();
