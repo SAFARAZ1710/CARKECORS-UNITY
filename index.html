@@ -120,53 +120,57 @@
     <!-- SLIDE 2: APLIKASI UTAMA -->
     <div id="main-app" class="hidden min-h-screen flex flex-col">
 
-       <!-- 1. Header & Navigation Bar -->
-        <header class="fixed w-full top-0 z-50 bg-cream/95 dark:bg-darkBg/95 backdrop-blur-md shadow-sm transition-all duration-300">
+      <!-- 1. Header & Navigation Bar (Warna Senada dengan Footer & Ada Garis Panjang di Bawah) -->
+        <header class="fixed w-full top-0 z-50 bg-coffee/95 dark:bg-[#0c0a09]/95 backdrop-blur-md border-b-4 border-terracotta shadow-md transition-all duration-300">
             <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16 sm:h-20">
+                    
+                    <!-- Logo & Brand -->
                     <div class="flex-shrink-0 flex items-center">
                         <a href="javascript:void(0)" onclick="handleLogoClick()" class="flex items-center gap-2 sm:gap-3 group cursor-pointer" title="CARKECORS UNITY">
                             <div id="main-logo-container" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0">
                                 <div class="w-full h-full rounded-full bg-gradient-to-tr from-terracotta to-sand text-white font-bold font-serif flex items-center justify-center text-xs sm:text-base shadow-sm group-hover:scale-105 transition-transform duration-300 tracking-wider">CS</div>
                             </div>
-                            <span class="font-serif text-lg sm:text-2xl font-bold text-coffee dark:text-cream tracking-wider">
+                            <span class="font-serif text-lg sm:text-2xl font-bold text-cream tracking-wider">
                                 CARKECORS <span class="text-terracotta">UNITY</span>
                             </span>
                         </a>
                     </div>
                     
+                    <!-- Menu Navigasi Bersih (Tanpa Kotak) -->
                     <nav class="hidden md:flex space-x-6 lg:space-x-8 items-center">
-                        <a href="#beranda" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Beranda</a>
-                        <a href="#filosofi" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Filosofi</a>
-                        <a href="#galeri" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Galeri Kenangan</a>
-                        <a href="#anggota" class="nav-link text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Anggota Kami</a>
+                        <a href="#beranda" class="nav-link text-cream/90 hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Beranda</a>
+                        <a href="#filosofi" class="nav-link text-cream/90 hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Filosofi</a>
+                        <a href="#galeri" class="nav-link text-cream/90 hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Galeri Kenangan</a>
+                        <a href="#anggota" class="nav-link text-cream/90 hover:text-terracotta font-semibold text-sm lg:text-base transition-colors">Anggota Kami</a>
 
-                        <button onclick="toggleDarkMode()" class="text-coffee dark:text-gray-300 hover:text-terracotta dark:hover:text-terracotta ml-2 transition-colors outline-none p-1.5" title="Ubah Tema">
+                        <button onclick="toggleDarkMode()" class="text-cream/80 hover:text-terracotta transition-colors outline-none p-1.5" title="Ubah Tema">
                             <i id="theme-icon-desktop" class="fas fa-moon text-lg lg:text-xl"></i>
                         </button>
 
-                        <!-- Menu Tamu: Hanya Tombol Login (Tanpa Folder Drive) -->
-                        <div id="guest-menu" class="flex items-center pl-3 lg:pl-4 border-l border-sand dark:border-gray-700">
-                            <button onclick="showGateScreen('login')" class="text-xs bg-terracotta hover:bg-coffee text-white font-bold px-3.5 lg:px-4 py-1.5 rounded-full transition-colors flex items-center gap-1.5 shadow-sm">
+                        <!-- Menu Tamu: Hanya Tombol Login -->
+                        <div id="guest-menu" class="flex items-center pl-3 lg:pl-4 border-l border-cream/20 dark:border-gray-800">
+                            <button onclick="showGateScreen('login')" class="text-xs bg-terracotta hover:bg-white hover:text-coffee text-white font-bold px-3.5 lg:px-4 py-1.5 rounded-full transition-colors flex items-center gap-1.5 shadow-sm">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </div>
 
-                        <!-- Menu Anggota/Admin: Folder Drive Hanya Muncul Jika Sudah Login -->
-                        <div id="user-menu" class="hidden flex items-center gap-2.5 lg:gap-3 pl-3 lg:pl-4 border-l border-sand dark:border-gray-700">
-                            <span id="logged-user-name" class="font-bold text-terracotta text-xs lg:text-sm"></span>
-                            <a href="https://drive.google.com/drive/folders/1jJdQcp6RiTHDB50kfVyQhcNDwCDj2-TR?usp=sharing" target="_blank" class="text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 px-3 py-1.5 rounded-full hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors flex items-center gap-1.5 font-semibold" title="Buka Folder Google Drive Bersama">
+                        <!-- Menu Anggota/Admin: Folder Drive & Logout -->
+                        <div id="user-menu" class="hidden flex items-center gap-2.5 lg:gap-3 pl-3 lg:pl-4 border-l border-cream/20 dark:border-gray-800">
+                            <span id="logged-user-name" class="font-bold text-sand text-xs lg:text-sm"></span>
+                            <a href="https://drive.google.com/drive/folders/1jJdQcp6RiTHDB50kfVyQhcNDwCDj2-TR?usp=sharing" target="_blank" class="text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 px-3 py-1.5 rounded-full hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors flex items-center gap-1.5 font-semibold" title="Buka Folder Google Drive Bersama">
                                 <i class="fab fa-google-drive"></i> Folder Drive
                             </a>
-                            <button onclick="logout()" class="text-xs bg-sand dark:bg-darkInput hover:bg-terracotta dark:hover:bg-terracotta text-coffee dark:text-white px-3 py-1 rounded-full transition-colors">Logout</button>
+                            <button onclick="logout()" class="text-xs bg-sand dark:bg-darkInput hover:bg-terracotta dark:hover:bg-terracotta text-coffee dark:text-white px-3 py-1.5 rounded-full transition-colors font-semibold">Logout</button>
                         </div>
                     </nav>
                     
+                    <!-- Tombol Menu HP -->
                     <div class="md:hidden flex items-center gap-2 sm:gap-3">
-                        <button onclick="toggleDarkMode()" class="p-2 text-coffee dark:text-gray-300 hover:text-terracotta outline-none">
+                        <button onclick="toggleDarkMode()" class="p-2 text-cream hover:text-terracotta outline-none">
                             <i id="theme-icon-mobile" class="fas fa-moon text-lg"></i>
                         </button>
-                        <button id="mobile-menu-btn" class="p-2 text-coffee dark:text-gray-300 hover:text-terracotta focus:outline-none text-xl">
+                        <button id="mobile-menu-btn" class="p-2 text-cream hover:text-terracotta focus:outline-none text-xl">
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
@@ -174,24 +178,22 @@
             </div>
 
             <!-- Mobile Menu Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden bg-cream/98 dark:bg-darkCard/98 border-t border-sand/40 dark:border-gray-800 shadow-xl">
+            <div id="mobile-menu" class="hidden md:hidden bg-coffee/98 dark:bg-[#0c0a09]/98 border-t border-cream/10 dark:border-gray-800 shadow-xl">
                 <div class="px-4 pt-3 pb-4 space-y-1.5 text-center">
-                    <a href="#beranda" class="block py-2.5 px-3 text-coffee dark:text-gray-300 hover:bg-sage/40 dark:hover:bg-darkInput hover:text-terracotta font-semibold rounded-xl text-sm">Beranda</a>
-                    <a href="#filosofi" class="block py-2.5 px-3 text-coffee dark:text-gray-300 hover:bg-sage/40 dark:hover:bg-darkInput hover:text-terracotta font-semibold rounded-xl text-sm">Filosofi</a>
-                    <a href="#galeri" class="block py-2.5 px-3 text-coffee dark:text-gray-300 hover:bg-sage/40 dark:hover:bg-darkInput hover:text-terracotta font-semibold rounded-xl text-sm">Galeri Kenangan</a>
-                    <a href="#anggota" class="block py-2.5 px-3 text-coffee dark:text-gray-300 hover:bg-sage/40 dark:hover:bg-darkInput hover:text-terracotta font-semibold rounded-xl text-sm">Anggota Kami</a>
+                    <a href="#beranda" class="block py-2.5 px-3 text-cream/90 hover:bg-white/10 hover:text-terracotta font-semibold rounded-xl text-sm">Beranda</a>
+                    <a href="#filosofi" class="block py-2.5 px-3 text-cream/90 hover:bg-white/10 hover:text-terracotta font-semibold rounded-xl text-sm">Filosofi</a>
+                    <a href="#galeri" class="block py-2.5 px-3 text-cream/90 hover:bg-white/10 hover:text-terracotta font-semibold rounded-xl text-sm">Galeri Kenangan</a>
+                    <a href="#anggota" class="block py-2.5 px-3 text-cream/90 hover:bg-white/10 hover:text-terracotta font-semibold rounded-xl text-sm">Anggota Kami</a>
                     
-                    <!-- Menu Tamu Mobile: Hanya Login -->
-                    <div id="mobile-guest-menu" class="pt-3 border-t border-sand/40 dark:border-gray-800">
+                    <div id="mobile-guest-menu" class="pt-3 border-t border-cream/20 dark:border-gray-800">
                         <button onclick="showGateScreen('login')" class="w-full justify-center bg-terracotta text-white py-2 rounded-xl text-sm font-semibold shadow-sm inline-flex items-center gap-2">
                             <i class="fas fa-sign-in-alt"></i> Login Anggota
                         </button>
                     </div>
 
-                    <!-- Menu Anggota/Admin Mobile: Folder Drive & Logout -->
-                    <div id="mobile-user-menu" class="hidden pt-3 border-t border-sand/40 dark:border-gray-800 space-y-2">
-                        <span id="mobile-logged-user-name" class="block text-terracotta font-bold text-sm"></span>
-                        <a href="https://drive.google.com/drive/folders/1jJdQcp6RiTHDB50kfVyQhcNDwCDj2-TR?usp=sharing" target="_blank" class="block py-2 px-3 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded-xl text-xs font-semibold text-center">
+                    <div id="mobile-user-menu" class="hidden pt-3 border-t border-cream/20 dark:border-gray-800 space-y-2">
+                        <span id="mobile-logged-user-name" class="block text-sand font-bold text-sm"></span>
+                        <a href="https://drive.google.com/drive/folders/1jJdQcp6RiTHDB50kfVyQhcNDwCDj2-TR?usp=sharing" target="_blank" class="block py-2 px-3 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 rounded-xl text-xs font-semibold text-center">
                             <i class="fab fa-google-drive"></i> Buka Folder Google Drive
                         </a>
                         <button onclick="logout()" class="w-full bg-sand dark:bg-darkInput text-coffee dark:text-white py-1.5 rounded-xl text-xs font-semibold">Logout</button>
@@ -233,7 +235,7 @@
                             CARKECORS berawal dari singkatan nama-nama kami dan rentetan kejadian lucu yang tak sengaja tercetus saat nongkrong berjam-jam tanpa arah. Nama yang terdengar aneh bagi orang lain, namun terasa seperti "rumah" bagi kami.
                         </p>
                         <p class="text-sm sm:text-base md:text-lg text-coffee/80 dark:text-gray-300 leading-relaxed mb-5 sm:mb-7">
-                            Kata <strong>UNITY</strong> melambangkan persatuan kami yang tak terpisahkan. Walau kami punya sifat yang berbeda-beda—ada yang pendiam, ada yang cerewet, ada yang selalu telat—perbedaan itulah yang menyatukan kami dalam harmoni tawa yang sama.
+                            Kata <strong>UNITY</strong> melambangkan persatuan kami yang tak terpisahkan. Walau kami punya sifat yang berbeda-beda. Ada yang pendiam, ada yang cerewet, ada yang selalu telat. Perbedaan itulah yang menyatukan kami dalam harmoni tawa yang sama.
                         </p>
                         <div class="flex items-center justify-center md:justify-start gap-3 sm:gap-4 text-terracotta">
                             <i class="fas fa-heart text-lg sm:text-2xl"></i>
@@ -305,7 +307,7 @@
                     </div>
 
                     <p class="text-terracotta font-semibold text-[11px] sm:text-xs md:text-sm animate-pulse mb-4 sm:mb-6">(Klik foto untuk membuka album)</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full" id="gallery-container"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8 w-full" id="gallery-container"></div>
                 </div>
 
                 <!-- BAGIAN VIDEO -->
@@ -353,7 +355,7 @@
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-coffee dark:text-cream mb-2 sm:mb-3">Kenali Wajah-wajah CARKECORS</h2>
                 <p class="text-xs sm:text-base text-coffee/70 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto px-2">Karakter berbeda, isi kepala berbeda, tapi entah kenapa bisa cocok.</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full" id="members-container"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8 w-full" id="members-container"></div>
             </div>
         </section>
 
@@ -434,6 +436,19 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Link Foto Profil (Google Drive)</label>
                     <input type="text" id="edit-prof-avatar-url" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-2.5 focus:ring-terracotta outline-none text-xs sm:text-sm" placeholder="https://drive.google.com/file/d/... atau biarkan kosong">
+                </div>
+
+                <!-- Input ID Panggilan (Username Login) -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-semibold text-coffee dark:text-gray-300 mb-1">ID Panggilan (Username Login) <span class="text-red-500">*</span></label>
+                    <input type="text" id="edit-prof-id" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-2.5 focus:ring-terracotta outline-none text-base sm:text-sm" placeholder="Huruf kecil tanpa spasi (misal: sabiq)">
+                    <p class="text-[10px] text-gray-400 mt-0.5">ID ini yang digunakan saat login ke website.</p>
+                </div>
+
+                <!-- Input Tanggal Lahir -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-semibold text-coffee dark:text-gray-300 mb-1">Tanggal Lahir</label>
+                    <input type="text" id="edit-prof-dob" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkInput text-coffee dark:text-cream rounded-lg p-2.5 focus:ring-terracotta outline-none text-base sm:text-sm" placeholder="Contoh: 12 Januari 2002">
                 </div>
 
                 <div>
