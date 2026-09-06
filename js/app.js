@@ -52,17 +52,17 @@ function openEditLogoModal() {
 function saveLogoLink() {
     const url = document.getElementById('edit-logo-url').value.trim();
     db.settings.logoUrl = url;
-    localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+    syncToCloud();
     renderLogo();
     closeModal('edit-logo-modal');
-    alert("Logo berhasil diperbarui!");
+    alert("Logo berhasil diperbarui dan tersinkron!");
 }
 
 function resetLogo() {
     if (currentUserKey !== 'admin') return alert('Hanya admin yang dapat mereset logo!');
     if (!confirm('Yakin ingin mereset logo ke lambang CS bawaan?')) return;
     db.settings.logoUrl = '';
-    localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+    syncToCloud();
     renderLogo();
     closeModal('edit-logo-modal');
     alert('Logo berhasil direset ke lambang CS bawaan!');
@@ -147,10 +147,10 @@ function saveFilosofiPhotoLink() {
     }
 
     db.settings.filosofiPhotos.push(...urls);
-    localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+    syncToCloud();
     renderFilosofi();
     closeModal('add-filosofi-modal');
-    alert(`${urls.length} foto filosofi berhasil ditambahkan!`);
+    alert(`${urls.length} foto filosofi berhasil ditambahkan dan tersinkron!`);
 }
 
 function deleteFilosofiPhoto(index) {
@@ -158,7 +158,7 @@ function deleteFilosofiPhoto(index) {
     if (!confirm('Yakin ingin menghapus foto filosofi ini?')) return;
 
     db.settings.filosofiPhotos.splice(index, 1);
-    localStorage.setItem('cu_settings', JSON.stringify(db.settings));
+    syncToCloud();
     renderFilosofi();
     alert('Foto filosofi berhasil dihapus!');
 }
@@ -283,7 +283,7 @@ function deleteMember(memberKey, e) {
     if (!confirm(`PERINGATAN ADMIN: Yakin ingin menghapus seluruh profil anggota "${memberName}" secara permanen?`)) return;
 
     delete db.members[memberKey];
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     renderMembers();
     
     if (activeMemberKey === memberKey) {
@@ -494,7 +494,7 @@ function removeProfileAvatar() {
     if (!confirm('Hapus foto profil dan kembalikan ke avatar inisial?')) return;
 
     db.members[activeMemberKey].avatarUrl = '';
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     renderMembers();
     loadMemberData(activeMemberKey);
     alert('Foto profil berhasil dihapus!');
@@ -525,11 +525,11 @@ function saveProfileData() {
     db.members[activeMemberKey].tiktok = tiktok.replace('@', '');
     db.members[activeMemberKey].pin = pin;
 
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     closeModal('edit-profile-modal');
     renderMembers();
     loadMemberData(activeMemberKey);
-    alert("Profil berhasil diperbarui!");
+    alert("Profil berhasil diperbarui dan tersinkron!");
 }
 
 function deletePersonalPhoto(photoIndex) {
@@ -539,7 +539,7 @@ function deletePersonalPhoto(photoIndex) {
     if (!confirm('Yakin ingin menghapus foto momen ini?')) return;
 
     db.members[activeMemberKey].photos.splice(photoIndex, 1);
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     loadMemberData(activeMemberKey);
     alert('Foto momen berhasil dihapus!');
 }
@@ -556,10 +556,10 @@ function savePersonalPhotos() {
 
     if ((currentUserKey === activeMemberKey || currentUserKey === 'admin') && db.members[activeMemberKey]) {
         db.members[activeMemberKey].photos.push(...urls);
-        localStorage.setItem('cu_members', JSON.stringify(db.members));
+        syncToCloud();
         closeModal('add-personal-photo-modal');
         loadMemberData(activeMemberKey);
-        alert(`${urls.length} foto pribadi berhasil ditambahkan!`);
+        alert(`${urls.length} foto pribadi berhasil ditambahkan dan tersinkron!`);
     }
 }
 
@@ -595,7 +595,7 @@ function deleteAlbum(albumKey, e) {
     if (!confirm(`Yakin ingin menghapus album "${albumTitle}" beserta seluruh foto di dalamnya?`)) return;
 
     delete db.albums[albumKey];
-    localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+    syncToCloud();
     renderGallery();
     alert(`Album "${albumTitle}" berhasil dihapus!`);
 }
@@ -668,10 +668,10 @@ function saveAlbumData() {
         cover: coverUrl, 
         photos: [coverUrl] 
     };
-    localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+    syncToCloud();
     closeModal('add-album-modal');
     renderGallery();
-    alert("Album berhasil dibuat!");
+    alert("Album berhasil dibuat dan tersinkron!");
 }
 
 function loadAlbumData(albumKey) {
@@ -722,7 +722,7 @@ function deleteAlbumPhoto(photoIndex) {
     if (!confirm('Yakin ingin menghapus foto ini dari album?')) return;
 
     db.albums[activeAlbumKey].photos.splice(photoIndex, 1);
-    localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+    syncToCloud();
     loadAlbumData(activeAlbumKey);
     alert('Foto berhasil dihapus dari album!');
 }
@@ -739,7 +739,7 @@ function saveAlbumPhotos() {
 
     if (activeAlbumKey && db.albums[activeAlbumKey]) {
         db.albums[activeAlbumKey].photos.push(...urls);
-        localStorage.setItem('cu_albums', JSON.stringify(db.albums));
+        syncToCloud();
         closeModal('add-photo-modal');
         loadAlbumData(activeAlbumKey);
         alert(`${urls.length} foto berhasil ditambahkan ke album!`);
@@ -822,7 +822,7 @@ function saveVideoData() {
     if (!url) return alert("Link video Google Drive wajib diisi!");
 
     db.videos.push({ title: title, desc: desc, src: url });
-    localStorage.setItem('cu_videos', JSON.stringify(db.videos));
+    syncToCloud();
     closeModal('add-video-modal');
     renderVideos();
     alert("Video berhasil ditambahkan!");
@@ -834,7 +834,7 @@ function deleteVideo(index) {
     if (!confirm(`Yakin ingin menghapus video "${videoTitle}"?`)) return;
 
     db.videos.splice(index, 1);
-    localStorage.setItem('cu_videos', JSON.stringify(db.videos));
+    syncToCloud();
     renderVideos();
     alert(`Video "${videoTitle}" berhasil dihapus!`);
 }
@@ -864,7 +864,7 @@ function saveNewMember() {
         ig: '', tiktok: '', pin: '1234', avatarUrl: '', photos: []
     };
 
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     closeModal('add-member-modal');
     renderMembers();
     alert('Anggota berhasil ditambahkan!');
@@ -883,7 +883,7 @@ function saveRole() {
     if (!newRole) return alert("Julukan tidak boleh kosong!");
     
     db.members[activeMemberKey].role = newRole;
-    localStorage.setItem('cu_members', JSON.stringify(db.members));
+    syncToCloud();
     closeModal('edit-role-modal');
     renderMembers();
     loadMemberData(activeMemberKey);
@@ -971,7 +971,7 @@ function toggleDarkMode() {
     }
 }
 
-// Inisialisasi Event Listener
+// Event Listener Menu Mobile & Enter
 const mobileBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
 if (mobileBtn && mobileMenu) {
@@ -988,7 +988,24 @@ document.getElementById('login-username')?.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') document.getElementById('login-pin')?.focus();
 });
 
-// Jalankan aplikasi
+// Listener Realtime Firebase: Otomatis sinkron di semua HP/browser yang sedang membuka website
+dbRef.on('value', (snapshot) => {
+    const cloudData = snapshot.val();
+    if (cloudData) {
+        db.members = cloudData.members || defaultMembers;
+        db.albums = cloudData.albums || {};
+        db.videos = cloudData.videos || [];
+        db.settings = cloudData.settings || { filosofiPhotos: [], logoUrl: '' };
+    } else {
+        // Jika cloud masih kosong, unggah data awal ke cloud
+        syncToCloud();
+    }
+    renderAll();
+    if (activeAlbumKey) loadAlbumData(activeAlbumKey);
+    if (activeMemberKey) loadMemberData(activeMemberKey);
+});
+
+// Inisialisasi awal tema & routing
 initTheme(); 
 window.addEventListener('hashchange', handleRoute);
 

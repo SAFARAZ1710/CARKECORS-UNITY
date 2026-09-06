@@ -1,3 +1,22 @@
+// Konfigurasi Firebase dari akun kamu
+const firebaseConfig = {
+    apiKey: "AIzaSyCGe5MhQhOCE9Wtj1MQ5tkxOmKtX-i-dIk",
+    authDomain: "carkecors-unity.firebaseapp.com",
+    databaseURL: "https://carkecors-unity-default-rtdb.firebaseio.com",
+    projectId: "carkecors-unity",
+    storageBucket: "carkecors-unity.firebasestorage.app",
+    messagingSenderId: "855116633659",
+    appId: "1:855116633659:web:8682cbf9b204861984ee1e",
+    measurementId: "G-KTNGDZ9FW9"
+};
+
+// Inisialisasi Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const dbRef = firebase.database().ref('carkecors_data');
+
+// Data Default Awal
 const defaultMembers = {
     'sabiq': { name: 'Sabiq Faruq Al-Fawwaz', role: 'Si Paling Santai', dob: '12 Januari 2002', quote: '"Jalani aja dulu, nanti juga sampai."', ig: 'el_f4rw4zsa', avatarUrl: '', photos: [] },
     'reval': { name: 'Reval Fathurrahman Yakub', role: 'Tukang Makan', dob: '05 Maret 2002', quote: '"Ada yang mau ngabisin nggak? Sini buat gue."', ig: 'revalfathur', avatarUrl: '', photos: [] },
@@ -15,24 +34,14 @@ const defaultMembers = {
     'syamil': { name: 'Syamil Sayyafi', role: 'Si Pendiam Menghanyutkan', dob: '19 September 2002', quote: '"Hmm... Yaudah gas aja."', ig: 'syamilsayyafi', avatarUrl: '', photos: [] }
 };
 
-const defaultAlbums = {};
-const defaultVideos = [];
-
-// Parse settings & migrasikan jika masih format foto tunggal
-let parsedSettings = JSON.parse(localStorage.getItem('cu_settings')) || {
-    filosofiPhotos: [],
-    logoUrl: '' 
-};
-
-if (!Array.isArray(parsedSettings.filosofiPhotos)) {
-    parsedSettings.filosofiPhotos = parsedSettings.filosofiPhoto ? [parsedSettings.filosofiPhoto] : [];
-}
-
 let db = {
-    members: JSON.parse(localStorage.getItem('cu_members')) || defaultMembers,
-    albums: JSON.parse(localStorage.getItem('cu_albums')) || defaultAlbums,
-    videos: JSON.parse(localStorage.getItem('cu_videos')) || defaultVideos,
-    settings: parsedSettings
+    members: defaultMembers,
+    albums: {},
+    videos: [],
+    settings: {
+        filosofiPhotos: [],
+        logoUrl: ''
+    }
 };
 
 let currentUserKey = localStorage.getItem('cu_currentUser') || null;
@@ -45,3 +54,12 @@ const themeStyles = [
     { border: 'border-sand', badgeBg: 'bg-sand', badgeText: 'text-coffee' },
     { border: 'border-coffee', badgeBg: 'bg-coffee', badgeText: 'text-cream' }
 ];
+
+// Fungsi otomatis sinkron ke Firebase Cloud
+function syncToCloud() {
+    if (typeof dbRef !== 'undefined') {
+        dbRef.set(db).catch(err => {
+            console.error("Gagal sinkron ke Firebase:", err);
+        });
+    }
+}
